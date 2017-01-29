@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from .loginapp.models import *
+from ..loginapp.models import *
 
 class ItemsManager(models.Manager):
 	def validate(self):
@@ -33,7 +33,7 @@ class CartsManager(models.Manager):
 
 class Carts(models.Model):
 	item = models.ForeignKey(Items, related_name='item_cart')
-	user = models.ForeignKey(Users, unique=True, related_name= 'user_cart')
+	user = models.ForeignKey(Users, related_name= 'user_cart')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	objects = CartsManager()
@@ -71,7 +71,7 @@ class Ratings(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	user = models.ForeignKey(Users, related_name='user_rating')
-	item = models.ForeignKey(Item, related_name='item_rating')
+	item = models.ForeignKey(Items, related_name='item_rating')
 	objects = RatingsManger()
 
 class CCManager(models.Manager):
