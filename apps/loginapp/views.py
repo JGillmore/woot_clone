@@ -20,7 +20,7 @@ def login(request):
         if Users.objects.login(request,email,password):
             request.session['today']=date.today().strftime('%b %d, %Y')
             request.session['restrictday']=str(date.today())
-            return redirect(reverse('login:index'))
+            return redirect(reverse('woot:index'))
     return redirect('/')
 
 def logout(request):
