@@ -1,1 +1,5 @@
-Home page <a href='login:login'>Login</a>
+{% if 'name' in request.session %}
+  Welcome {{request.session.name}}, <a href='{% url 'login:logout' %}'>Logout</a>
+{% else %}
+  Welcome Anon, <a href='{% url 'login:index' %}'>Login</a>
+{% endif %} 

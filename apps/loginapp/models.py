@@ -32,7 +32,7 @@ class UserManager(models.Manager):
             pwhash=bcrypt.hashpw(password.encode(), bcrypt.gensalt())
         if isValid:
             try:
-                temp=Users.objects.create(first_name=first_name, last_name=last_name, email=email, password=pwhash, birth_date=birth_date)
+                temp=Users.objects.create(first_name=first_name, last_name=last_name, email=email, password=pwhash, birth_date=birth_date, admin=False)
                 return temp
             except:
                 messages.add_message(request, messages.INFO,"Account already exists, please log in instead")
@@ -57,8 +57,10 @@ class Users(models.Model):
     last_name = models.CharField(max_length=30)
     email = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
-    birth_date = models.DateTimeField()
+    birth_date = models.DateField()
+    admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 
     objects = UserManager()

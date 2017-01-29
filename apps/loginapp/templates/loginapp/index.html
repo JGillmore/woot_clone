@@ -2,7 +2,7 @@
 {% for message in messages %}
   <p>{{message}}</p>
 {% endfor %}
-<form action='/register' method='post'>
+<form action='{% url 'login:register' %}' method='post'>
   {% csrf_token %}
   Email:--------------- <input type='text' name='email'>
   <br>
@@ -18,7 +18,7 @@
 </form>
 
 <h1>login</h1>
-<form action='/login' method='post'>
+<form action='{% url 'login:login' %}' method='post'>
   {% csrf_token %}
   Email:--------------- <input type='text' name='email'>
   <br>
