@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from .loginapp.models import *
+from ..loginapp.models import *
 
 class ItemsManager(models.Manager):
 	def validate(self):
@@ -11,7 +11,7 @@ class ItemsManager(models.Manager):
 	def update(self):
 		pass
 	def delete(self):
-		pass			
+		pass
 
 class Items(models.Model):
 	name = models.CharField(max_length=200)
@@ -30,11 +30,11 @@ class CartsManager(models.Manager):
 	def delete(self):
 		pass
 	def checkout(self):
-		pass		
+		pass
 
 class Carts(models.Model):
 	item = models.ForeignKey(Items, related_name='item_cart')
-	user = models.ForeignKey(Users, unique=True, related_name= 'user_cart')
+	user = models.ForeignKey(Users, related_name= 'user_cart')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	objects = CartsManager()
@@ -47,7 +47,7 @@ class DisscussionsManager(models.Manager):
 	def update(self):
 		pass
 	def delete(self):
-		pass				
+		pass
 
 class Disscussions(models.Model):
 	discussion = models.TextField()
@@ -65,14 +65,14 @@ class RatingsManger(models.Manager):
 	def delete(self):
 		pass
 	def update(self):
-		pass				
+		pass
 
 class Ratings(models.Model):
 	rating = models.PositiveSmallIntegerField()
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	user = models.ForeignKey(Users, related_name='user_rating')
-	item = models.ForeignKey(Item, related_name='item_rating')
+	item = models.ForeignKey(Items, related_name='item_rating')
 	objects = RatingsManger()
 
 class CCManager(models.Manager):
@@ -83,7 +83,7 @@ class CCManager(models.Manager):
 	def update(self):
 		pass
 	def delete():
-		pass		
+		pass
 
 class CC(models.Model):
 	full_name = models.CharField(max_length=100)
@@ -94,10 +94,3 @@ class CC(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 	user = models.ForeignKey(Users, related_name='user_cc')
 	objects = CCManager()
-
-class Purchased(models.Model):
-	user = models.ForeignKey(Users, related_name='user_purchase')
-	item = models.ForeignKey(Items, related_name='item_purchase')
-	created_at = models.DateTimeField(auto_now_add=True)
-
-

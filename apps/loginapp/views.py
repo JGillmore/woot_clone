@@ -8,6 +8,7 @@ from datetime import date
 
 def index(request):
     context = {}
+    request.session['restrictday']=str(date.today())
     if messages:
         context['messages']=get_messages(request)
     return render(request, 'loginapp/index.html', context)
@@ -19,7 +20,7 @@ def login(request):
         if Users.objects.login(request,email,password):
             request.session['today']=date.today().strftime('%b %d, %Y')
             request.session['restrictday']=str(date.today())
-            return redirect(reverse('blackbelt:index'))
+            return redirect(reverse('login:index'))
     return redirect('/')
 
 def logout(request):
@@ -40,5 +41,5 @@ def register(request):
             request.session['id']=temp.id
             request.session['today']=date.today().strftime('%b %d, %Y')
             request.session['restrictday']=str(date.today())
-            return redirect(reverse('blackbelt:index'))
+            return redirect(reverse('woot:index'))
         return redirect('/')
