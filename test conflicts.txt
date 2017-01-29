@@ -1,4 +1,0 @@
-<<<<<<< HEAD
-jeremy's line
-=======
->>>>>>> ba59d3c0c4413abf2c8ad134018d03580e843dec
