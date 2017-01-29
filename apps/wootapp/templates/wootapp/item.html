@@ -1,1 +1,36 @@
-item.html
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Item Information</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script> 
+  		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<a href="/" style="display: inline-block;"><h5>Home</h5></a>
+				<a href="/browse/{{item.category}}" style="display: inline-block;"><h5>##Category##</h5></a>
+				<a href="/cart" style="display: inline-block;"><h5>Cart</h5></a>
+				<a href="/user" style="display: inline-block;"><h5>User Account</h5></a>
+			</div>
+			<div class="row align center">
+				<h4>{{item.name}}</h4>
+				<h5>Units left 123 out of {{item.available units}}</h5>
+				<img src="{{item.image}}" alt="product image">
+				<h6>Price:{{item.price}}</h6>
+				if no rating say no rating
+				<h6>Rating Query</h6>
+				<p>{{item.description}}</p>
+				{% for d in discussion %}
+					<h6 class="bold">{{d.user_id.first_name}}</h6>
+					<h6 class="thin">{{d.created_at|date}}</h6>
+					<p>{{d.discussion}}</p>
+				{% endfor %} 
+			</div>
+		</div>
+	</body>
+</html>
+
+
