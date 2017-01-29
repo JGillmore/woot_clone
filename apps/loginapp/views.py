@@ -43,3 +43,12 @@ def register(request):
             request.session['restrictday']=str(date.today())
             return redirect(reverse('woot:index'))
         return redirect('/')
+
+def update_info(request):
+    if request.method=='POST':
+        email = request.POST['email']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        birth_date = request.POST['birth_date']
+        Users.objects.update_info(request, email, first_name, last_name, birth_date)
+    return redirect(reverse('woot:user'))

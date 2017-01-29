@@ -51,6 +51,14 @@ class UserManager(models.Manager):
         messages.add_message(request, messages.INFO,"Invalid login")
         return False
 
+    def update_info(self, request, email, first_name, last_name, birth_date):
+        user = Users.objects.get(id=request.session['id'])
+        user.email = email
+        user.first_name = first_name
+        user.last_name = last_name
+        user.birth_date = birth_date
+        user.save()
+        return
 
 class Users(models.Model):
     first_name = models.CharField(max_length=30)
