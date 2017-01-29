@@ -13,7 +13,7 @@
   Password:----------- <input type='password' name='password'>
   <br>
   Confirm Password: <input type='password' name='confirmpassword'>
-  <p>Birth Date: <input type = 'date'  name='birth_date' ></p>
+  <p>Birth Date: <input type = 'date'  name='birth_date' max='{{request.session.restrictday}}'></p>
   <input type='submit' name='button' value='Submit'>
 </form>
 
