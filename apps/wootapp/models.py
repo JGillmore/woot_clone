@@ -44,7 +44,7 @@ class Carts(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 	objects = CartsManager()
 
-class DisscussionsManager(models.Manager):
+class DiscussionsManager(models.Manager):
 	def validate(self):
 		pass
 	def add(self):
@@ -54,13 +54,13 @@ class DisscussionsManager(models.Manager):
 	def delete(self):
 		pass
 
-class Disscussions(models.Model):
+class Discussions(models.Model):
 	discussion = models.TextField()
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	user = models.ForeignKey(Users, related_name='user_discussion')
 	item = models.ForeignKey(Items, related_name='item_discussion')
-	objects = DisscussionsManager()
+	objects = DiscussionsManager()
 
 class RatingsManger(models.Manager):
 	def validate(self):
