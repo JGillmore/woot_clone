@@ -17,17 +17,45 @@
 			</div>
 			<div class="row align center">
 				<h4>{{item.name}}</h4>
-				<h5>Units left 123 out of {{item.available units}}</h5>
+				<h5>Units {{items_left}} out of {{item.units}}</h5>
 				<img src="{{item.image}}" alt="product image">
 				<h6>Price:{{item.price}}</h6>
-				if no rating say no rating
-				<h6>Rating Query</h6>
+				<h6>Item Rating: {{rating__avg}}</h6>
+				<form method="POST" action="">
+					<p style="display: inline-block;">
+      				<input name="rating" type="radio" value="1"/>
+      				<label for="1">1</label>
+    				</p>
+    				<p style="display: inline-block;">
+      				<input name="rating" type="radio" value="2"/>
+      				<label for="2">2</label>
+    				</p>
+    				<p style="display: inline-block;">
+      				<input name="rating" type="radio" value="3"/>
+      				<label for="3">3</label>
+    				</p>
+    				<p style="display: inline-block;">
+      				<input name="rating" type="radio" value="4"/>
+      				<label for="4">4</label>
+    				</p>
+    				<p style="display: inline-block;">
+      				<input name="rating" type="radio" value="5"/>
+      				<label for="5">5</label>
+    				</p>
+    				<input type="hidden" name="hidden" value="{{item.id}}">
+    				<input type="submit" name="submit" value="Submit Rating">
+				</form>
 				<p>{{item.description}}</p>
 				{% for d in discussion %}
 					<h6 class="bold">{{d.user_id.first_name}}</h6>
 					<h6 class="thin">{{d.created_at|date}}</h6>
 					<p>{{d.discussion}}</p>
-				{% endfor %} 
+				{% endfor %}
+				<form action="" method="POST">
+					<label for="discussion">Add Discussion</label>
+					<textarea name="discussion"></textarea>
+					<input type="submit" name="submit" value="Add Discussion">
+				</form>
 			</div>
 		</div>
 	</body>

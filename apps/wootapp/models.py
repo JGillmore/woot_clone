@@ -17,7 +17,7 @@ class Items(models.Model):
 	name = models.CharField(max_length=200)
 	description = models.TextField()
 	price = models.DecimalField(max_digits=9, decimal_places=2)
-	available_units = models.PositiveSmallIntegerField()
+	units = models.PositiveSmallIntegerField()
 	category = models.CharField(max_length=200)
 	image = models.ImageField()
 	created_at = models.DateTimeField(auto_now_add=True)
@@ -94,3 +94,10 @@ class CC(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 	user = models.ForeignKey(Users, related_name='user_cc')
 	objects = CCManager()
+
+class Purchased(models.Model):
+	item = models.ForeignKey(Items, related_name='item_purchased')
+	user = models.ForeignKey(Users, related_name='user_purchased')
+	created_at = models.DateTimeField(auto_now_add=True)
+
+		
