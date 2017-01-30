@@ -36,7 +36,7 @@ def item(request, id):
 	items_left = item.units - items_left
 	imageurl = str(item.image)
 	print imageurl
-	item.image = imageurl.replace("apps/wootapp/","",1)
+	item.image = imageurl.replace("apps/wootapp","",1)
 	print item.image
 	context = {'item': item, 'discussion': discussion,'items_left': items_left}
 	return render(request, 'wootapp/item.html', context)
