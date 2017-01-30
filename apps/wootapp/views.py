@@ -18,7 +18,7 @@ def browse(request):
     return render(request, 'wootapp/browse.html')
 
 def create_deal(request):
-    return render(request, 'wootapp/create_deal.html', context)
+    return render(request, 'wootapp/create_deal.html')
 
 def cart(request):
 	id = request.session['id']
@@ -48,8 +48,6 @@ def add_rating(request):
 
 def add_item(request):
     if request.method == 'POST':
-        print request.POST
-        print request.FILES
         Items.objects.add(request.POST['name'], request.POST['description'], request.POST['price'], request.POST['units'], request.POST['category'], request.FILES['image'])
     return redirect(reverse('woot:create_deal'))
 
