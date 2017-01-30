@@ -36,7 +36,7 @@ def item(request, id):
 	items_left = item.units - items_left
 	imageurl = str(item.image)
 	print imageurl
-	item.image = imageurl.replace("apps/wootapp/","",1)
+	item.image = imageurl.replace("apps/wootapp","",1)
 	print item.image
 	context = {'item': item, 'discussion': discussion,'items_left': items_left}
 	return render(request, 'wootapp/item.html', context)
@@ -68,5 +68,5 @@ def checkout(request):
     #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION
     # item = Items.objects.get(id=2)
     # imageurl = str(item.image)
-    # item.image = imageurl.replace("apps/wootapp/","",1)
+    # item.image = imageurl.replace("apps/wootapp","",1)
     # context = {'item':item, 'imageurl':imageurl}
