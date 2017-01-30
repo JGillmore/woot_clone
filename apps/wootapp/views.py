@@ -25,12 +25,8 @@ def cart(request):
 	cart = Carts.objects.filter(user_id=id)
 	rating = "1"
 	context = {'cart':cart, 'rating':rating}
-<<<<<<< HEAD
 	return render(request, 'wootapp/cart.html', context)
 
-=======
-	return render(request, 'wootapp/cart.html', context)	
->>>>>>> 671b6f679495e1388552e0a729497f840c90604e
 def item(request, id):
 	try:
 		item = Items.objects.get(id=id)
@@ -58,7 +54,6 @@ def add_item(request):
     return redirect(reverse('woot:create_deal'))
 
 def checkout(request):
-<<<<<<< HEAD
     return render(request, 'wootapp/checkout.html')
 
 
@@ -67,6 +62,3 @@ def checkout(request):
     # imageurl = str(item.image)
     # item.image = imageurl.replace("apps/wootapp/","",1)
     # context = {'item':item, 'imageurl':imageurl}
-=======
-	return render(request, 'wootapp/checkout.html')
->>>>>>> 671b6f679495e1388552e0a729497f840c90604e
