@@ -1,1 +1,16 @@
-create_deal.html
+<form action='{% url 'woot:add_item' %}' method='post' enctype="multipart/form-data">
+  {% csrf_token %}
+  Item Name:-------<input type='text' name='name'>
+  <br>
+  Item Description:<textarea name='description'></textarea>
+  <br>
+  Price:--------------<input type='text' name='price'>
+  <br>
+  Amount to sell:--<input type='text' name='units'>
+  <br>
+  Category:---------<input type='text' name='category'>
+  <br>
+  Image:-------------<input type='file' name='image'>
+  <br>
+  <input type='submit' name='button' value='Add Item'>
+</form>

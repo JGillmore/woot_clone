@@ -4,10 +4,15 @@ from django.db import models
 from ..loginapp.models import *
 
 class ItemsManager(models.Manager):
-	def validate(self):
-		pass
-	def add(self):
-		pass
+	def validate(self, name, description, price, units, category, image):
+		if name and description and price and units and category and image:
+			return True
+		return False
+
+	def add(self, name, description, price, units, category, image):
+		item = Items.objects.create(name=name, description=description, price=price, units=units, category=category, image=image)
+		return
+
 	def update(self):
 		pass
 	def delete(self):
@@ -17,9 +22,9 @@ class Items(models.Model):
 	name = models.CharField(max_length=200)
 	description = models.TextField()
 	price = models.DecimalField(max_digits=9, decimal_places=2)
-	available_units = models.PositiveSmallIntegerField()
+	units = models.PositiveSmallIntegerField()
 	category = models.CharField(max_length=200)
-	image = models.ImageField()
+	image = models.ImageField(upload_to='apps/wootapp/static/images/dbitems/')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	objects = ItemsManager()
