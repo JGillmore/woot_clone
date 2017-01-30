@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
+from django.db.models import Avg
+from django.contrib import messages
 import datetime
 
 from .models import *
@@ -28,23 +30,31 @@ def cart(request):
 	return render(request, 'wootapp/cart.html', context)
 
 def item(request, id):
-	try:
-		item = Items.objects.get(id=id)
-		discussion = Discussion.objects.get(item_id=id).order_by('-created_at')
-		items_left = Purchased.objects.filter(item_id=id).filter(user_id=request.session['id']).count()
-		items_left = item.units - items_left
-		rating = Rating.objects.filter(item_id=id).aggregate(Avg('rating'))
-		context = {'item': item, 'discussion': discussion,'items_left': items_left, 'rating':rating}
-		return render(request, 'wootapp/item.html', context)
-	except:
-		return redirect('/')
+	item = Items.objects.get(id=id)
+	discussion = Discussions.objects.filter(item_id=id)
+	items_left = Purchased.objects.filter(item_id=id).filter(user_id=request.session['id']).count()
+	items_left = item.units - items_left
+	imageurl = str(item.image)
+	print imageurl
+	item.image = imageurl.replace("apps/wootapp/","",1)
+	print item.image
+	context = {'item': item, 'discussion': discussion,'items_left': items_left}
+	return render(request, 'wootapp/item.html', context)
+
+
 def add_rating(request):
 	rating = request.POST['rating']
-	item_id = request.POST['hidden']
+	item = request.POST['hidden']
+	user = request.session['id']
 	try:
-		Rating.objects.get(items_id=item_id, user_id=request.session['id'])
+		Ratings.objects.all()
+		print '1'
+		messages.add_message(request, messages.ERROR, 'You have already rated this item')
+		return redirect('/item/'+item)
 	except:
-		pass
+		print '2'
+		Ratings.objects.create(item_id=item, user_id=user, rating=rating)
+	return redirect('/item/'+item)
 
 def add_item(request):
     if request.method == 'POST':
