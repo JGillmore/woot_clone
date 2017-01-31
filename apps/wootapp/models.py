@@ -30,21 +30,6 @@ class Items(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 	objects = ItemsManager()
 
-class CartsManager(models.Manager):
-	def add(self):
-		pass
-	def delete(self):
-		pass
-	def checkout(self):
-		pass
-
-class Carts(models.Model):
-	item = models.ForeignKey(Items, related_name='item_cart')
-	user = models.ForeignKey(Users, related_name= 'user_cart')
-	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
-	objects = CartsManager()
-
 class DiscussionsManager(models.Manager):
 	def validate(self):
 		pass
@@ -89,6 +74,7 @@ class Purchases(models.Model):
 		stripe.api_key = settings.STRIPE_API_KEY
 
 		self.stripe = stripe
+		# HEY GUYS! pip install --index-url https://code.stripe.com --upgrade stripe
 
 	item = models.ForeignKey(Items, related_name='item_purchased')
 	user = models.ForeignKey(Users, related_name='user_purchased')

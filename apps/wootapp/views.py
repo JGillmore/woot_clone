@@ -3,9 +3,10 @@ from django.core.urlresolvers import reverse
 from django.db.models import Avg
 from django.contrib import messages
 import datetime
-
+from forms import CreditCardForm
 from .models import *
 from ..loginapp.models import Users
+from .models import Items, Purchases
 
 def index(request):
     return render(request, 'wootapp/index.html')
@@ -23,10 +24,10 @@ def create_deal(request):
     return render(request, 'wootapp/create_deal.html')
 
 def cart(request):
-	id = request.session['id']
-	cart = Carts.objects.filter(user_id=id)
+	user = Users.objects.get(id=request.session['id'])
+	purchases = Purchases.objects.filter(user=user)
 	rating = "1"
-	context = {'cart':cart, 'rating':rating}
+	context = {'purchases':purchases, 'rating':rating}
 	return render(request, 'wootapp/cart.html', context)
 
 def item(request, id):
@@ -62,7 +63,19 @@ def add_item(request):
     return redirect(reverse('woot:create_deal'))
 
 def checkout(request):
-    return render(request, 'wootapp/checkout.html')
+    customer = Users.objects.get(id=request.session['id'])
+    cart_items = Items.objects.filter(item_purchased__status='open')
+    purchased_items = Items.objects.filter(item_purchased__status='closed')
+    form = CreditCardForm()
+
+    if request.method == 'POST':
+        form = CreditCardForm(request.POST)
+        if form.is_valid():
+            for item in customer.purchases_set.filter(status='open'):
+                item.charge(item.product.price*100, request.POST['number'], request.POST['expiration_0'], request.POST['expiration_1'], request.POST['cvc'])
+            messages.success(request, 'Products purchased!')
+            return redirect('woot:checkout')
+    return render(request, 'wootapp/checkout.html', {'cart_items': cart_items, 'purchased_items':purchased_items, 'form': form})
 
 
     #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION

@@ -4,7 +4,7 @@
 		<title>Cart</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
-  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script> 
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
   		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	</head>
 	<body>
@@ -28,16 +28,16 @@
           				</tr>
         			</thead>
         			<tbody>
-        			{% for i in cart %}
+        			{% for purchase in purchases %}
           				<tr>
           					<td><img src="http://lorempixel.com/40/20/"></td>
-            				<td>{i.name}</td>
-            				<td>{i.category}</td>
-            				<td>{i.price}</td>
+            				<td>{purchase.items.name}</td>
+            				<td>{purchase.items.category}</td>
+            				<td>{purchase.items.price}</td>
             				<td>{rating.rating}</td>
-            				<td><a href="/delete/{i.id}" class="red-text"><i class="material-icons">remove_shopping_cart</i></a></td>
+            				<td><a href="/delete/{purchase.id}" class="red-text"><i class="material-icons">remove_shopping_cart</i></a></td>
           				</tr>
-          			{% endfor %}	
+          			{% endfor %}
        				</tbody>
       			</table>
       			<a class="waves-effect waves-light btn green" href="/checkout">Checkout</a>
@@ -45,4 +45,3 @@
 		</div>
 	</body>
 </html>
-
