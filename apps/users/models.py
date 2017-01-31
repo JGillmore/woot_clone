@@ -44,11 +44,11 @@ class UserManager(models.Manager):
             request.session['name']=user.first_name
             request.session['id']=user.id
         except:
-            messages.add_message(request, messages.INFO,"Invalid login")
+            messages.add_message(request, messages.ERROR,"Invalid login")
             return False
         if bcrypt.hashpw(password.encode(), user.password.encode()) == user.password:
             return True
-        messages.add_message(request, messages.INFO,"Invalid login")
+        messages.add_message(request, messages.ERROR,"Invalid login")
         return False
 
     def update_info(self, request, email, first_name, last_name, birth_date):

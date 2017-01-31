@@ -39,8 +39,9 @@ def cart(request):
         if request.method == 'POST':
             form = CreditCardForm(request.POST)
             if form.is_valid():
-                for item in cart_items:
-                    item.charge(item.price*100, request.POST['number'], request.POST['expiration_0'], request.POST['expiration_1'], request.POST['cvc'])
+                for item in user.purchases_set.filter(status='open'):
+                    decimal_price = item.item.price*100
+                    item.charge(int(decimal_price), request.POST['number'], request.POST['expiration_0'], request.POST['expiration_1'], request.POST['cvc'])
                 messages.success(request, 'Products purchased!')
                 return redirect('items:cart')
         return render(request, 'items/cart.html', {'cart_items': cart_items, 'rating': rating, 'form': form})

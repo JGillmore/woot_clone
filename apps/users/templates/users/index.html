@@ -3,7 +3,9 @@
 {% block content %}
   <h1>Register</h1>
   {% for message in messages %}
-    <p>{{message}}</p>
+    {% if message.tags == 'info' %}
+    <p class='error'>{{message}}</p>
+    {% endif %}
   {% endfor %}
   <form action='{% url "users:register" %}' method='post'>
     {% csrf_token %}
@@ -21,6 +23,11 @@
   </form>
 
   <h1>login</h1>
+  {% for message in messages %}
+    {% if message.tags == 'error' %}
+    <p class='error'>{{message}}</p>
+    {% endif %}
+  {% endfor %}
   <form action='{% url "users:login" %}' method='post'>
     {% csrf_token %}
     Email:--------------- <input type='text' name='email'>
