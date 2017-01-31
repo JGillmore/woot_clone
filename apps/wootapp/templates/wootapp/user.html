@@ -1,3 +1,8 @@
+{% extends 'layout.html' %}
+
+{% block title %}User{% endblock %}
+
+{% block content %}
 <a href='{% url 'login:logout' %}'>Logout</a>
 <form action='{% url 'login:update_info' %}' method='post'>
   {% csrf_token %}
@@ -21,3 +26,4 @@ List items user has posted in the discussion for:
   <p>{{ item.name }}</p>
   <p>{{ item.price}}</p>
 {% endfor %}
+{% endblock %}
