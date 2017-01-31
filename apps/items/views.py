@@ -29,8 +29,11 @@ def create_deal(request):
 def cart(request):
     if 'id' in request.session:
         user = Users.objects.get(id=request.session['id'])
-        cart_items = Items.objects.filter(item_purchased__status='open').filter(item_purchased__user=user)
+        cart_items = Purchases.objects.filter(status='open').filter(user=user)
         rating = "1"
+        for item in cart_items:
+            imageurl = str(item.item.image)
+            item.image = imageurl.replace("apps/items","",1)
         form = CreditCardForm()
 
         if request.method == 'POST':
@@ -41,12 +44,21 @@ def cart(request):
                 messages.success(request, 'Products purchased!')
                 return redirect('items:cart')
         return render(request, 'items/cart.html', {'cart_items': cart_items, 'rating': rating, 'form': form})
-    return redirect('users:login')
+    return redirect('users:index')
+
+def remove_cart(request, id):
+    if 'id' in request.session:
+        delete = Purchases.objects.get(pk=id)
+        delete.delete()
+        return redirect('items:cart')
+    return redirect('users:index')    
+
+
 
 def item(request, id):
     item = get_object_or_404(Items, id=id)
     discussion = Discussions.objects.filter(item_id=id).order_by('-created_at')
-    items_left = Purchases.objects.filter(item_id=id).filter(user_id=request.session['id']).count()
+    items_left = Purchases.objects.filter(item_id=id).count()
     items_left = item.units - items_left
     imageurl = str(item.image)
     item.image = imageurl.replace("apps/items","",1)
@@ -59,33 +71,40 @@ def item(request, id):
     return render(request, 'items/item.html', context)
 
 def add_cart(request, id):
-    quantity = int(request.POST['quantity'])
-    item = id
-    status = 'open'
-    user = request.session['id']
-    while quantity>0:
-        Purchases.objects.create(item_id=item, user_id=user, status=status)
-        quantity = quantity-1
-    return redirect('/cart')
-
+    try:
+        quantity = int(request.POST['quantity'])
+        item = id
+        status = 'open'
+        user = request.session['id']
+        while quantity>0:
+            Purchases.objects.create(item_id=item, user_id=user, status=status)
+            quantity = quantity-1
+        return redirect('/cart')
+    except: 
+        return redirect('users:index')        
 def add_discussion(request):
-     discussion = request.POST['discussion']
-     user = request.session['id']
-     item = request.POST['hidden_id']
-     Discussions.objects.create(discussion=discussion, user_id=user, item_id=item)
-     return redirect('items:item', id=item)
+    try:
+         discussion = request.POST['discussion']
+         user = request.session['id']
+         item = request.POST['hidden_id']
+         Discussions.objects.create(discussion=discussion, user_id=user, item_id=item)
+         return redirect('items:item', id=item)
+    except:
+        return redirect('users:index')
 
 def add_rating(request):
-    rate = request.POST['rating']
-    item = request.POST['hidden']
-    user = request.session['id']
     try:
-        r = Ratings.objects.get(user_id=user, item_id=item)
-        Ratings.objects.filter(user_id=user).filter(item_id=item).update(rating=rate)
+        rate = request.POST['rating']
+        item = request.POST['hidden']
+        user = request.session['id']
+        try:
+            r = Ratings.objects.get(user_id=user, item_id=item)
+            Ratings.objects.filter(user_id=user).filter(item_id=item).update(rating=rate)
+        except:
+            Ratings.objects.create(item_id=item, user_id=user, rating=rate)
         return redirect('items:item', id=item)
     except:
-        Ratings.objects.create(item_id=item, user_id=user, rating=rate)
-        return redirect('items:item', id=item)
+        return redirect('users:index')
 def add_item(request):
     if request.method == 'POST':
         Items.objects.add(request.POST['name'], request.POST['description'], request.POST['price'], request.POST['units'], request.POST['category'], request.FILES['image'])

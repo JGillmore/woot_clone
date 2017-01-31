@@ -10,27 +10,28 @@
 	</div>
 	<div class="row">
 		<h1>{{request.session.name}}'s Cart</h1>
-		<table class="valign wrapper striped">
-    			<thead>
-      				<tr>
-      					<th></th>
-          				<th>Item Name</th>
-          				<th>Category</th>
-          				<th>Price</th>
-          				<th>Rating</th>
-          				<th></th>
-      				</tr>
-    			</thead>
-    			<tbody>
-    			{% for item in cart_items %}
-      				<tr>
-      					<td><img src="http://lorempixel.com/40/20/"></td>
-								{{ item}}
-        				<td><a href="/delete/{purchase.id}" class="red-text"><i class="material-icons">remove_shopping_cart</i></a></td>
-      				</tr>
-      			{% endfor %}
-   				</tbody>
-  			</table>
+		<table class = "table table-striped">
+			<col width="10%">
+   			<thead>
+      			<tr>
+         			<th></th>
+         			<th align="middle">Item</th>
+         			<th align="middle">Price</th>
+         			<th align="middle">Remove</th>
+      			</tr>
+   			</thead>
+   			<tbody>
+   			{% for i in cart_items %}
+      			<tr>
+      			{% load static %}
+         			<td><img src="{{i.image}}" alt="{{i.name}}" align="middle" width="140" height="70"></td>
+         			<td>{{i.item.name}}</td>
+         			<td>${{i.item.price}}</td>
+         			<td><a href="remove_cart/{{i.id}}"><span class="glyphicon glyphicon-trash" style="color: red; font-size: 2em;"></span></a></td>
+      			</tr>
+      		{% endfor %}	
+   			</tbody>
+		</table>
 	</div>
 	<h5>Enter Credit Card Info. Here</h5>
 	<form method="post">
@@ -54,3 +55,5 @@
 	</form>
 </div>
 {% endblock %}
+
+

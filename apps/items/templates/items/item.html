@@ -50,7 +50,7 @@
  				</p>
  				<p style="display: inline-block;">
     				<input name="rating" type="radio" id="rating5"  value="5" {%if r.rating == 5%} checked="checked" {%endif%} />
-    				<label for="rating5"><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span></label>
+    				<label for="rating5"><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span></label>
  				</p>
  				<input type="hidden" name="hidden" value="{{item.id}}">
 				<input type="submit" name="submit" value="Submit Rating">
@@ -64,7 +64,7 @@
 			<input type="submit" name="submit" value="Add Discussion">
 		</form>
 		{% for d in discussion %}
-			<h6>{{d.user_id.first_name}}</h6>
+			<h6>{{d.user.first_name}}</h6>
 			<h6 class="thin">{{d.created_at}}</h6>
 			<p style="padding-left: 2em;">{{d.discussion}}</p>
 		{% endfor %}
