@@ -24,7 +24,10 @@ def browse(request, category):
     return render(request, 'items/browse.html', context)
 
 def create_deal(request):
-    return render(request, 'items/create_deal.html')
+    user = Users.objects.get(id=request.session['id'])
+    if user.admin:
+        return render(request, 'items/create_deal.html')
+    return redirect('items:index')
 
 def cart(request):
     if 'id' in request.session:
@@ -36,7 +39,7 @@ def cart(request):
             sum_total = sum_total + float(item.item.price)
             imageurl = str(item.item.image)
             item.image = imageurl.replace("apps/items","",1)
-        print sum_total 
+        print sum_total
         form = CreditCardForm()
 
         if request.method == 'POST':
@@ -55,7 +58,7 @@ def remove_cart(request, id):
         delete = Purchases.objects.get(pk=id)
         delete.delete()
         return redirect('items:cart')
-    return redirect('users:index')    
+    return redirect('users:index')
 
 
 
@@ -84,8 +87,8 @@ def add_cart(request, id):
             Purchases.objects.create(item_id=item, user_id=user, status=status)
             quantity = quantity-1
         return redirect('/cart')
-    except: 
-        return redirect('users:index')        
+    except:
+        return redirect('users:index')
 def add_discussion(request):
     try:
          discussion = request.POST['discussion']
