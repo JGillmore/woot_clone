@@ -25,9 +25,9 @@ def create_deal(request):
 
 def cart(request):
 	user = Users.objects.get(id=request.session['id'])
-	purchases = Purchases.objects.filter(user=user)
+	cart_items = Items.objects.filter(item_purchased__status='open').filter(user_purchased__user=user)
 	rating = "1"
-	context = {'purchases':purchases, 'rating':rating}
+	context = {'cart_items':cart_items, 'rating':rating}
 	return render(request, 'wootapp/cart.html', context)
 
 def item(request, id):
@@ -64,8 +64,8 @@ def add_item(request):
 
 def checkout(request):
     customer = Users.objects.get(id=request.session['id'])
-    cart_items = Items.objects.filter(item_purchased__status='open')
-    purchased_items = Items.objects.filter(item_purchased__status='closed')
+    cart_items = Items.objects.filter(item_purchased__status='open').filter(user_purchased__user=customer)
+    purchased_items = Items.objects.filter(item_purchased__status='closed').filter(user_purchased__user=customer)
     form = CreditCardForm()
 
     if request.method == 'POST':

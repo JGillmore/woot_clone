@@ -30,42 +30,6 @@ class Items(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 	objects = ItemsManager()
 
-class DiscussionsManager(models.Manager):
-	def validate(self):
-		pass
-	def add(self):
-		pass
-	def update(self):
-		pass
-	def delete(self):
-		pass
-
-class Discussions(models.Model):
-	discussion = models.TextField()
-	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
-	user = models.ForeignKey(Users, related_name='user_discussion')
-	item = models.ForeignKey(Items, related_name='item_discussion')
-	objects = DiscussionsManager()
-
-class RatingsManger(models.Manager):
-	def validate(self):
-		pass
-	def add(self):
-		pass
-	def delete(self):
-		pass
-	def update(self):
-		pass
-
-class Ratings(models.Model):
-	rating = models.PositiveSmallIntegerField()
-	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
-	user = models.ForeignKey(Users, related_name='user_rating')
-	item = models.ForeignKey(Items, related_name='item_rating')
-	objects = RatingsManger()
-
 class Purchases(models.Model):
 	def __init__(self, *args, **kwargs):
 		super(Purchases, self).__init__(*args, **kwargs)
@@ -77,7 +41,7 @@ class Purchases(models.Model):
 		# HEY GUYS! pip install --index-url https://code.stripe.com --upgrade stripe
 
 	item = models.ForeignKey(Items, related_name='item_purchased')
-	user = models.ForeignKey(Users, related_name='user_purchased')
+	user = models.ForeignKey(Users)
 	status = models.CharField(max_length=255)
 	charge_id = models.CharField(max_length=32, default='')
 	created_at = models.DateTimeField(auto_now_add=True)
@@ -116,3 +80,39 @@ class Purchases(models.Model):
 	      	self.status = 'closed'
 	      	self.save()
 	      	return True, response
+
+class DiscussionsManager(models.Manager):
+	def validate(self):
+		pass
+	def add(self):
+		pass
+	def update(self):
+		pass
+	def delete(self):
+		pass
+
+class Discussions(models.Model):
+	discussion = models.TextField()
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+	user = models.ForeignKey(Users, related_name='user_discussion')
+	item = models.ForeignKey(Items, related_name='item_discussion')
+	objects = DiscussionsManager()
+
+class RatingsManger(models.Manager):
+	def validate(self):
+		pass
+	def add(self):
+		pass
+	def delete(self):
+		pass
+	def update(self):
+		pass
+
+class Ratings(models.Model):
+	rating = models.PositiveSmallIntegerField()
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+	user = models.ForeignKey(Users, related_name='user_rating')
+	item = models.ForeignKey(Items, related_name='item_rating')
+	objects = RatingsManger()

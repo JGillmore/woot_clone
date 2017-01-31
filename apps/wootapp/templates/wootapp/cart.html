@@ -28,13 +28,10 @@
           				</tr>
         			</thead>
         			<tbody>
-        			{% for purchase in purchases %}
+        			{% for item in cart_items %}
           				<tr>
           					<td><img src="http://lorempixel.com/40/20/"></td>
-            				<td>{purchase.items.name}</td>
-            				<td>{purchase.items.category}</td>
-            				<td>{purchase.items.price}</td>
-            				<td>{rating.rating}</td>
+										{{ item}}
             				<td><a href="/delete/{purchase.id}" class="red-text"><i class="material-icons">remove_shopping_cart</i></a></td>
           				</tr>
           			{% endfor %}
