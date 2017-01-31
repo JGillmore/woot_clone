@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block title %}User{% endblock %}
+
+{% block content %}
+<a href='{% url "users:logout" %}'>Logout</a>
+<form action='{% url "users:update_info" %}' method='post'>
+  {% csrf_token %}
+  Email:--------------- <input type='text' name='email' value='{{user.email}}'>
+  <br>
+  First Name:--------- <input type='text' name='first_name' value='{{user.first_name}}'>
+  <br>
+  Last Name:--------- <input type='text' name='last_name' value='{{user.last_name}}'>
+  <br>
+  Birth Date: <input type = 'date'  name='birth_date' value='{{user.birth_date|date:"Y-m-d"}}'max='{{request.session.restrictday}}'>
+  <input type='submit' name='button' value='Update'>
+</form>
+{% if user.admin %}
+  <a href='{% url "items:create_deal" %}'>Add a Deal</a>
+{% endif %}
+<br>
+List items user has posted in the discussion for:
+<br>
+<h1>Purchase History</h1>
+{% for item in purchased_items %}
+  <p>{{ item.name }}</p>
+  <p>{{ item.price}}</p>
+{% endfor %}
+{% endblock %}

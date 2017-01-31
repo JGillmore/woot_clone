@@ -11,38 +11,37 @@
 	</div>
 	<div class="row align center">
 		{% for m in messages %}
-		<h4 class="red-text">{{m}}</h4>
+		<h1>{{m}}</h1>
 		{% endfor %}
 		<h4>{{item.name}}</h4>
 		<h5>Units {{items_left}} out of {{item.units}}</h5>
 
 		{% load static %}
 		<img src="{{item.image}}" alt="{{item.name}}">
-
-
-		<h6>Price:${{item.price}}</h6>
-		<h6>Item Rating: {{item.rating.average__rating}}</h6>
+		<h4>Price:${{item.price}}</h4>
+		<h4>Item Rating: {{item.rating.average__rating}}</h4>
+		<p>{% if not r == 0 %}Update your rating of product{% endif %}</p>
 		<form method="POST" action="/add_rating">
 		{% csrf_token %}
 				<p style="display: inline-block;">
-  					<input name="rating" type="radio" id="rating1" value="1" />
-  					<label for="rating1"><-1</label>
+  					<input name="rating" type="radio" id="rating1" value="1" {%if r.rating == 1%} checked="checked" {%endif%}/>
+  					<label for="rating1">*</label>
 				</p>
 				<p style="display: inline-block;">
-    				<input name="rating" type="radio" id="rating2" value="2" />
-    				<label for="rating2"><-2</label>
+    				<input name="rating" type="radio" id="rating2" value="2" {%if r.rating == 2%} checked="checked" {%endif%}/>
+    				<label for="rating2">**</label>
   			</p>
   			<p style="display: inline-block;">
-    				<input name="rating" type="radio" id="rating3"  value="3" />
-    				<label for="rating3"><-3</label>
+    				<input name="rating" type="radio" id="rating3"  value="3" {%if r.rating == 3%} checked="checked" {%endif%} />
+    				<label for="rating3">***</label>
   			</p>
   			<p style="display: inline-block;">
-    				<input name="rating" type="radio" id="rating4" value="4" />
-    				<label for="rating4"><-4</label>
+    				<input name="rating" type="radio" id="rating4" value="4" {%if r.rating == 4%} checked="checked" {%endif%} />
+    				<label for="rating4">****</label>
  				</p>
  				<p style="display: inline-block;">
-    				<input name="rating" type="radio" id="rating5"  value="5" />
-    				<label for="rating5"><-5</label>
+    				<input name="rating" type="radio" id="rating5"  value="5" {%if r.rating == 5%} checked="checked" {%endif%} />
+    				<label for="rating5">*****</label>
  				</p>
  				<input type="hidden" name="hidden" value="{{item.id}}">
 				<input type="submit" name="submit" value="Submit Rating">

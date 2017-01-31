@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from datetime import date, datetime
 from calendar import monthrange
 
-from ..wootapp.models import Purchases
+from ..items.models import Purchases
 
 class CreditCardField(forms.CharField):
     def clean(self, value):
