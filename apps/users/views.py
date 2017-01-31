@@ -23,7 +23,7 @@ def login(request):
             request.session['today']=date.today().strftime('%b %d, %Y')
             request.session['restrictday']=str(date.today())
             return redirect(reverse('users:profile'))
-    return redirect('/')
+    return redirect('users:index')
 
 def register(request):
     if request.method == 'POST':
