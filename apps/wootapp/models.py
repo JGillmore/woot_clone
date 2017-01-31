@@ -81,7 +81,7 @@ class Ratings(models.Model):
 	item = models.ForeignKey(Items, related_name='item_rating')
 	objects = RatingsManger()
 
-class Purchased(models.Model):
+class Purchases(models.Model):
 	def __init__(self, *args, **kwargs):
 		super(Purchases, self).__init__(*args, **kwargs)
 
