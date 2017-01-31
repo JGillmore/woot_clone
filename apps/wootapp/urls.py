@@ -9,6 +9,5 @@ urlpatterns = [
 	url(r'^add$', add_item, name='add_item'),
 	url(r'^item/(?P<id>\d+$)', item, name='item'),
 	url(r'^cart$', cart, name='cart'),
-	url(r'^checkout$', checkout, name='checkout'),
 	url(r'^add_rating$', add_rating),
 ]

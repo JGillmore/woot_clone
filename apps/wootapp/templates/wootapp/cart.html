@@ -37,8 +37,28 @@
           			{% endfor %}
        				</tbody>
       			</table>
-      			<a class="waves-effect waves-light btn green" href="/checkout">Checkout</a>
 			</div>
+			<br>
+			<h5>Enter Credit Card Info. Here</h5>
+			<form method="post">
+				{% csrf_token %}
+				{% for field in form %}
+					<div>{{ field.label_tag }} {{ field }}</div>
+					{% if field.errors %}
+					<div class="error">{{ field.errors }}</div>
+					{% endif %}
+				{% endfor %}
+				{% if form.non_field_errors %}
+				<div class="error">
+					<ul>
+						{% for err in form.non_field_errors %}
+							<li>{{ err }}</li>
+						{% endfor %}
+					</ul>
+				</div>
+				{% endif %}
+				<button type="submit" name="button">Purchase</button>
+			</form>
 		</div>
 	</body>
 </html>
