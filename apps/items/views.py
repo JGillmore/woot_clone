@@ -12,8 +12,16 @@ from .models import Items, Purchases, Discussions
 def index(request):
     return render(request, 'items/index.html')
 
-def browse(request):
-    return render(request, 'items/browse.html')
+def browse(request, category):
+    if category=='all':
+        items = Items.objects.all().order_by('category').order_by('name')
+    else:
+        items = Items.objects.all().filter(category=category).order_by('name')
+    for item in items:
+        imageurl = str(item.image)
+        item.image = imageurl.replace("apps/items","",1)
+    context = {'items':items}
+    return render(request, 'items/browse.html', context)
 
 def create_deal(request):
     return render(request, 'items/create_deal.html')
