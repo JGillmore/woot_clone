@@ -104,5 +104,3 @@ class Purchased(models.Model):
 	item = models.ForeignKey(Items, related_name='item_purchased')
 	user = models.ForeignKey(Users, related_name='user_purchased')
 	created_at = models.DateTimeField(auto_now_add=True)
-
-		
