@@ -6,10 +6,8 @@
 	<div class="row">
 		<a href="/" style="display: inline-block;"><h5>Home</h5></a>
 		<a href="/browse/{{item.category}}" style="display: inline-block;"><h5>##Category##</h5></a>
-		<a href="/cart" style="display: inline-block;"><h5>Cart</h5></a>
-		<a href="/user" style="display: inline-block;"><h5>User Account</h5></a>
 	</div>
-	<div class="row align center">
+	<div class="row align center" style="margin-bottom: 70px;">
 		{% for m in messages %}
 		<h1>{{m}}</h1>
 		{% endfor %}
@@ -19,42 +17,56 @@
 		{% load static %}
 		<img src="{{item.image}}" alt="{{item.name}}">
 		<h4>Price:${{item.price}}</h4>
-		<h4>Item Rating: {{item.rating.average__rating}}</h4>
+		<form method="POST" action="/add_cart/{{item.id}}">
+		{% csrf_token %}
+			<select name="quantity">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="2">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+			</select>
+			<input type="submit" name="submit" value="Add To Cart">
+		</form>
+		<h4>Item Rating: {{rating_avg.rating__avg}}</h4>
 		<p>{% if not r == 0 %}Update your rating of product{% endif %}</p>
 		<form method="POST" action="/add_rating">
 		{% csrf_token %}
 				<p style="display: inline-block;">
   					<input name="rating" type="radio" id="rating1" value="1" {%if r.rating == 1%} checked="checked" {%endif%}/>
-  					<label for="rating1">*</label>
+  					<label for="rating1"><span class="glyphicon glyphicon-star"></span></label>
 				</p>
 				<p style="display: inline-block;">
     				<input name="rating" type="radio" id="rating2" value="2" {%if r.rating == 2%} checked="checked" {%endif%}/>
-    				<label for="rating2">**</label>
+    				<label for="rating2"><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span></label>
   			</p>
   			<p style="display: inline-block;">
     				<input name="rating" type="radio" id="rating3"  value="3" {%if r.rating == 3%} checked="checked" {%endif%} />
-    				<label for="rating3">***</label>
+    				<label for="rating3"><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span></label>
   			</p>
   			<p style="display: inline-block;">
     				<input name="rating" type="radio" id="rating4" value="4" {%if r.rating == 4%} checked="checked" {%endif%} />
-    				<label for="rating4">****</label>
+    				<label for="rating4"><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span></label>
  				</p>
  				<p style="display: inline-block;">
     				<input name="rating" type="radio" id="rating5"  value="5" {%if r.rating == 5%} checked="checked" {%endif%} />
-    				<label for="rating5">*****</label>
+    				<label for="rating5"><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span></label>
  				</p>
  				<input type="hidden" name="hidden" value="{{item.id}}">
 				<input type="submit" name="submit" value="Submit Rating">
 			</form>
 		<p>{{item.description}}</p>
-		{% for d in discussion %}
-			<h6 class="bold">{{d.user_id.first_name}}</h6>
-			<h6 class="thin">{{d.created_at|date}}</h6>
-			<p>{{d.discussion}}</p>
-		{% endfor %}
-		<form action="" method="POST">
+		<form action="/add_discussion" method="POST">
+		{% csrf_token %}
 			<label for="discussion">Add Discussion</label>
 			<textarea name="discussion"></textarea>
+			<input type="hidden" name="hidden_id" value="{{item.id}}">
 			<input type="submit" name="submit" value="Add Discussion">
 		</form>
+		{% for d in discussion %}
+			<h6>{{d.user_id.first_name}}</h6>
+			<h6 class="thin">{{d.created_at}}</h6>
+			<p style="padding-left: 2em;">{{d.discussion}}</p>
+		{% endfor %}
+	</div>	
 {% endblock %}

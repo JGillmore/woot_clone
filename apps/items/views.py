@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
-from django.db.models import Avg
+from django.db.models import Avg, Sum
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 import datetime
@@ -34,19 +34,35 @@ def cart(request):
 
 def item(request, id):
     item = get_object_or_404(Items, id=id)
-    discussion = Discussions.objects.filter(item_id=id)
+    discussion = Discussions.objects.filter(item_id=id).order_by('-created_at')
     items_left = Purchases.objects.filter(item_id=id).filter(user_id=request.session['id']).count()
     items_left = item.units - items_left
     imageurl = str(item.image)
     item.image = imageurl.replace("apps/items","",1)
-    rating_count = Ratings.objects.filter(item_id=item).count()
-    print rating_count
+    rating_avg = Ratings.objects.filter(item_id=item).aggregate(Avg('rating'))
     try:
         r = Ratings.objects.get(user_id=request.session['id'],item_id=id)
     except:
         r = 0
-    context = {'item': item, 'discussion': discussion,'items_left': items_left, 'r': r}
+    context = {'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': r}
     return render(request, 'items/item.html', context)
+
+def add_cart(request, id):
+    quantity = int(request.POST['quantity'])
+    item = id
+    status = 'open'
+    user = request.session['id']
+    while quantity>0:
+        Purchases.objects.create(item_id=item, user_id=user, status=status)
+        quantity = quantity-1
+    return redirect('/cart')
+
+def add_discussion(request):
+     discussion = request.POST['discussion']
+     user = request.session['id']
+     item = request.POST['hidden_id']
+     Discussions.objects.create(discussion=discussion, user_id=user, item_id=item)
+     return redirect('items:item', id=item)
 
 def add_rating(request):
     rate = request.POST['rating']
