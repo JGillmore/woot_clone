@@ -16,4 +16,8 @@
 <br>
 List items user has posted in the discussion for:
 <br>
-purchase history:
+<h1>Purchase History</h1>
+{% for item in purchased_items %}
+  <p>{{ item.name }}</p>
+  <p>{{ item.price}}</p>
+{% endfor %}

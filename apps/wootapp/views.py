@@ -13,8 +13,9 @@ def index(request):
 
 def user(request):
     user = Users.objects.get(id=request.session['id'])
+    purchased_items = Items.objects.filter(item_purchased__status='closed').filter(item_purchased__user=user)
     birth_date = str(user.birth_date)
-    context = {'user':user, 'birth_date':birth_date}
+    context = {'user':user, 'birth_date':birth_date, 'purchased_items':purchased_items}
     return render(request, 'wootapp/user.html', context)
 
 def browse(request):
