@@ -3,7 +3,7 @@
 {% block title %}Create Deal{% endblock %}
 
 {% block content %}
-<form action='{% url 'woot:add_item' %}' method='post' enctype="multipart/form-data">
+<form action='{% url 'items:add_item' %}' method='post' enctype="multipart/form-data">
   {% csrf_token %}
   Item Name:-------<input type='text' name='name'>
   <br>
