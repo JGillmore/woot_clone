@@ -9,6 +9,9 @@ from .models import *
 from ..users.models import Users
 from .models import Items, Purchases, Discussions
 
+def index(request):
+    return render(request, 'items/index.html')
+
 def browse(request):
     return render(request, 'items/browse.html')
 
