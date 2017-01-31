@@ -24,11 +24,13 @@ def create_deal(request):
     return render(request, 'wootapp/create_deal.html')
 
 def cart(request):
-	user = Users.objects.get(id=request.session['id'])
-	cart_items = Items.objects.filter(item_purchased__status='open').filter(item_purchased__user=user)
-	rating = "1"
-	context = {'cart_items':cart_items, 'rating':rating}
-	return render(request, 'wootapp/cart.html', context)
+    if 'id' in request.session:
+    	user = Users.objects.get(id=request.session['id'])
+    	cart_items = Items.objects.filter(item_purchased__status='open').filter(item_purchased__user=user)
+    	rating = "1"
+    	context = {'cart_items':cart_items, 'rating':rating}
+    	return render(request, 'wootapp/cart.html', context)
+    return redirect('login:login')
 
 def item(request, id):
 	item = Items.objects.get(id=id)
@@ -63,20 +65,21 @@ def add_item(request):
     return redirect(reverse('woot:create_deal'))
 
 def checkout(request):
-    user = Users.objects.get(id=request.session['id'])
-    cart_items = Items.objects.filter(item_purchased__status='open').filter(item_purchased__user=user)
-    purchased_items = Items.objects.filter(item_purchased__status='closed').filter(item_purchased__user=user)
-    form = CreditCardForm()
+    if 'id' in request.session:
+        user = Users.objects.get(id=request.session['id'])
+        cart_items = Items.objects.filter(item_purchased__status='open').filter(item_purchased__user=user)
+        purchased_items = Items.objects.filter(item_purchased__status='closed').filter(item_purchased__user=user)
+        form = CreditCardForm()
 
-    if request.method == 'POST':
-        form = CreditCardForm(request.POST)
-        if form.is_valid():
-            for item in cart_items:
-                item.charge(item.price*100, request.POST['number'], request.POST['expiration_0'], request.POST['expiration_1'], request.POST['cvc'])
-            messages.success(request, 'Products purchased!')
-            return redirect('woot:checkout')
-    return render(request, 'wootapp/checkout.html', {'cart_items': cart_items, 'purchased_items':purchased_items, 'form': form})
-
+        if request.method == 'POST':
+            form = CreditCardForm(request.POST)
+            if form.is_valid():
+                for item in cart_items:
+                    item.charge(item.price*100, request.POST['number'], request.POST['expiration_0'], request.POST['expiration_1'], request.POST['cvc'])
+                messages.success(request, 'Products purchased!')
+                return redirect('woot:checkout')
+        return render(request, 'wootapp/checkout.html', {'cart_items': cart_items, 'purchased_items':purchased_items, 'form': form})
+    return redirect('login:login')
 
     #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION
     # item = Items.objects.get(id=2)
