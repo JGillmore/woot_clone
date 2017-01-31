@@ -41,7 +41,7 @@ class Purchases(models.Model):
 		# HEY GUYS! pip install --index-url https://code.stripe.com --upgrade stripe
 
 	item = models.ForeignKey(Items, related_name='item_purchased')
-	user = models.ForeignKey(Users)
+	user = models.ForeignKey(Users, related_name='user_purchased')
 	status = models.CharField(max_length=255)
 	charge_id = models.CharField(max_length=32, default='')
 	created_at = models.DateTimeField(auto_now_add=True)

@@ -25,7 +25,7 @@ def create_deal(request):
 
 def cart(request):
 	user = Users.objects.get(id=request.session['id'])
-	cart_items = Items.objects.filter(item_purchased__status='open').filter(user_purchased__user=user)
+	cart_items = Items.objects.filter(item_purchased__status='open').filter(item_purchased__user=user)
 	rating = "1"
 	context = {'cart_items':cart_items, 'rating':rating}
 	return render(request, 'wootapp/cart.html', context)
@@ -63,16 +63,16 @@ def add_item(request):
     return redirect(reverse('woot:create_deal'))
 
 def checkout(request):
-    customer = Users.objects.get(id=request.session['id'])
-    cart_items = Items.objects.filter(item_purchased__status='open').filter(user_purchased__user=customer)
-    purchased_items = Items.objects.filter(item_purchased__status='closed').filter(user_purchased__user=customer)
+    user = Users.objects.get(id=request.session['id'])
+    cart_items = Items.objects.filter(item_purchased__status='open').filter(item_purchased__user=user)
+    purchased_items = Items.objects.filter(item_purchased__status='closed').filter(item_purchased__user=user)
     form = CreditCardForm()
 
     if request.method == 'POST':
         form = CreditCardForm(request.POST)
         if form.is_valid():
-            for item in customer.purchases_set.filter(status='open'):
-                item.charge(item.product.price*100, request.POST['number'], request.POST['expiration_0'], request.POST['expiration_1'], request.POST['cvc'])
+            for item in cart_items:
+                item.charge(item.price*100, request.POST['number'], request.POST['expiration_0'], request.POST['expiration_1'], request.POST['cvc'])
             messages.success(request, 'Products purchased!')
             return redirect('woot:checkout')
     return render(request, 'wootapp/checkout.html', {'cart_items': cart_items, 'purchased_items':purchased_items, 'form': form})
