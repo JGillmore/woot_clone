@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 import datetime
 from forms import CreditCardForm
 from .models import *
-from ..loginapp.models import Users
+from ..users.models import Users
 from .models import Items, Purchases
 
 def browse(request):
@@ -30,7 +30,7 @@ def cart(request):
                 messages.success(request, 'Products purchased!')
                 return redirect('woot:checkout')
         return render(request, 'wootapp/cart.html', {'cart_items': cart_items, 'rating': rating, 'form': form})
-    return redirect('login:login')
+    return redirect('users:login')
 
 def item(request, id):
 	item = get_object_or_404(Items, id=id)

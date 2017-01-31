@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from ..loginapp.models import *
+from ..users.models import *
 import settings
 
 class ItemsManager(models.Manager):
@@ -25,7 +25,7 @@ class Items(models.Model):
 	price = models.DecimalField(max_digits=9, decimal_places=2)
 	units = models.PositiveSmallIntegerField()
 	category = models.CharField(max_length=200)
-	image = models.ImageField(upload_to='apps/wootapp/static/images/dbitems/')
+	image = models.ImageField(upload_to='apps/items/static/images/dbitems/')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	objects = ItemsManager()
