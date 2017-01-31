@@ -2,8 +2,6 @@ from django.conf.urls import url
 from views import *
 
 urlpatterns = [
-	url(r'^$', index, name='index'),
-	url(r'^user$', user, name='user'),
 	url(r'^browse/(?P<category>.+$)', browse, name='browse'),
 	url(r'^create$', create_deal, name='create_deal'),
 	url(r'^add$', add_item, name='add_item'),
