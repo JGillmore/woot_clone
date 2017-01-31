@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.db.models import Avg
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 import datetime
 from forms import CreditCardForm
 from .models import *
@@ -42,7 +43,7 @@ def cart(request):
     return redirect('login:login')
 
 def item(request, id):
-	item = Items.objects.get(id=id)
+	item = get_object_or_404(Items, id=id)
 	discussion = Discussions.objects.filter(item_id=id)
 	items_left = Purchased.objects.filter(item_id=id).filter(user_id=request.session['id']).count()
 	items_left = item.units - items_left
