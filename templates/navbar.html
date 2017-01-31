@@ -16,6 +16,7 @@
       <ul class="nav navbar-nav navbar-right">
         {% if 'id' in request.session %}
           <li><a href="{% url 'items:cart' %}">Cart</a></li>
+          <li><a href="{% url 'users:profile' %}">Account</a></li>
           <li><a href="{% url 'users:logout' %}">Logout</a></li>
         {% else %}
           <li><a href="{% url 'users:index' %}">Login</a></li>
