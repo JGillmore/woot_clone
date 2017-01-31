@@ -30,10 +30,13 @@ def cart(request):
     if 'id' in request.session:
         user = Users.objects.get(id=request.session['id'])
         cart_items = Purchases.objects.filter(status='open').filter(user=user)
+        sum_total = 0.00
         rating = "1"
         for item in cart_items:
+            sum_total = sum_total + float(item.item.price)
             imageurl = str(item.item.image)
             item.image = imageurl.replace("apps/items","",1)
+        print sum_total 
         form = CreditCardForm()
 
         if request.method == 'POST':
@@ -44,7 +47,7 @@ def cart(request):
                     item.charge(int(decimal_price), request.POST['number'], request.POST['expiration_0'], request.POST['expiration_1'], request.POST['cvc'])
                 messages.success(request, 'Products purchased!')
                 return redirect('items:cart')
-        return render(request, 'items/cart.html', {'cart_items': cart_items, 'rating': rating, 'form': form})
+        return render(request, 'items/cart.html', {'cart_items': cart_items, 'rating': rating, 'form': form, 'sum_total':sum_total})
     return redirect('users:index')
 
 def remove_cart(request, id):
