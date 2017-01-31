@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <h1>Register</h1>
+  {% for message in messages %}
+    <p>{{message}}</p>
+  {% endfor %}
+  <form action='{% url "users:register" %}' method='post'>
+    {% csrf_token %}
+    Email:--------------- <input type='text' name='email'>
+    <br>
+    First Name:--------- <input type='text' name='first_name'>
+    <br>
+    Last Name:--------- <input type='text' name='last_name'>
+    <br>
+    Password:----------- <input type='password' name='password'>
+    <br>
+    Confirm Password: <input type='password' name='confirmpassword'>
+    <p>Birth Date: <input type = 'date'  name='birth_date' max='{{request.session.restrictday}}'></p>
+    <input type='submit' name='button' value='Submit'>
+  </form>
+
+  <h1>login</h1>
+  <form action='{% url "users:login" %}' method='post'>
+    {% csrf_token %}
+    Email:--------------- <input type='text' name='email'>
+    <br>
+    Password:----------- <input type='password' name='password'>
+    <input type='submit' name='button' value='Submit'>
+  </form>
+{% endblock %}

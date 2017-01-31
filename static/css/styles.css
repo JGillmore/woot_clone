@@ -1,0 +1,10 @@
+.wrapper{
+  margin-top: 80px;
+}
+footer{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background: #F8F8F8;
+  width: 100%;
+}

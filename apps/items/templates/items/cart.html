@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<a href="/" style="display: inline-block;"><h5>Home</h5></a>
+		<a href="" style="display: inline-block;"><h5>##Category/dropdown##</h5></a>
+		<a href="/user" style="display: inline-block;"><h5>User Account</h5></a>
+	</div>
+	<div class="row">
+		<h1>{{request.session.name}}'s Cart</h1>
+		<table class="valign wrapper striped">
+    			<thead>
+      				<tr>
+      					<th></th>
+          				<th>Item Name</th>
+          				<th>Category</th>
+          				<th>Price</th>
+          				<th>Rating</th>
+          				<th></th>
+      				</tr>
+    			</thead>
+    			<tbody>
+    			{% for item in cart_items %}
+      				<tr>
+      					<td><img src="http://lorempixel.com/40/20/"></td>
+								{{ item}}
+        				<td><a href="/delete/{purchase.id}" class="red-text"><i class="material-icons">remove_shopping_cart</i></a></td>
+      				</tr>
+      			{% endfor %}
+   				</tbody>
+  			</table>
+	</div>
+	<h5>Enter Credit Card Info. Here</h5>
+	<form method="post">
+		{% csrf_token %}
+		{% for field in form %}
+			<div>{{ field.label_tag }} {{ field }}</div>
+			{% if field.errors %}
+			<div class="error">{{ field.errors }}</div>
+			{% endif %}
+		{% endfor %}
+		{% if form.non_field_errors %}
+		<div class="error">
+			<ul>
+				{% for err in form.non_field_errors %}
+					<li>{{ err }}</li>
+				{% endfor %}
+			</ul>
+		</div>
+		{% endif %}
+		<button type="submit" name="button">Purchase</button>
+	</form>
+</div>
+{% endblock %}

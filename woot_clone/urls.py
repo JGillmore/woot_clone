@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 urlpatterns = [
-	url(r'^', include('apps.wootapp.urls', namespace='woot')),
-	url(r'^login/', include('apps.loginapp.urls', namespace='login')),
+	url(r'^', include('apps.items.urls', namespace='items')),
+	url(r'^', include('apps.users.urls', namespace='users')),
     url(r'^admin/', admin.site.urls),
 ]

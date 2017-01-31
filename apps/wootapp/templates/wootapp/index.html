@@ -1,5 +1,0 @@
-{% if 'name' in request.session %}
-  Welcome {{request.session.name}}, <a href='{% url 'login:logout' %}'>Logout</a> | <a href='{% url 'woot:user' %}'>Settings</a>
-{% else %}
-  Welcome Anon, <a href='{% url 'login:index' %}'>Login</a>
-{% endif %}

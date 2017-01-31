@@ -1,2 +1,4 @@
 *.pyc
 *.sqlite3
+apps/wootapp/settings.py
+apps/wootapp/settings.pyc
