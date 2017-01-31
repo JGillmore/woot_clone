@@ -39,8 +39,8 @@ def register(request):
             request.session['id']=temp.id
             request.session['today']=date.today().strftime('%b %d, %Y')
             request.session['restrictday']=str(date.today())
-            return redirect(reverse('users:profile'))
-        return redirect('/')
+            return redirect('users:profile')
+    return redirect('users:index')
 
 def logout(request):
     request.session.clear()
@@ -62,4 +62,4 @@ def update_info(request):
         last_name = request.POST['last_name']
         birth_date = request.POST['birth_date']
         Users.objects.update_info(request, email, first_name, last_name, birth_date)
-    return redirect(reverse('users:profile'))
+    return redirect('users:profile')

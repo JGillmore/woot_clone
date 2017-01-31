@@ -3,8 +3,8 @@
 {% block title %}User{% endblock %}
 
 {% block content %}
-<a href='{% url 'login:logout' %}'>Logout</a>
-<form action='{% url 'login:update_info' %}' method='post'>
+<a href='{% url "users:logout" %}'>Logout</a>
+<form action='{% url "users:update_info" %}' method='post'>
   {% csrf_token %}
   Email:--------------- <input type='text' name='email' value='{{user.email}}'>
   <br>
@@ -16,7 +16,7 @@
   <input type='submit' name='button' value='Update'>
 </form>
 {% if user.admin %}
-  <a href='{% url 'woot:create_deal' %}'>Add a Deal</a>
+  <a href='{% url "items:create_deal" %}'>Add a Deal</a>
 {% endif %}
 <br>
 List items user has posted in the discussion for:
