@@ -9,4 +9,6 @@ urlpatterns = [
 	url(r'^item/(?P<id>\d+$)', item, name='item'),
 	url(r'^cart$', cart, name='cart'),
 	url(r'^add_rating$', add_rating),
+	url(r'^add_discussion$', add_discussion),
+	url(r'^add_cart/(?P<id>\d+$)', add_cart),
 ]
