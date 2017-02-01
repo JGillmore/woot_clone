@@ -38,6 +38,7 @@ def index(request):
 def browse(request, category):
     if category=='all':
         items = Items.objects.all().order_by('category').order_by('name')
+        category = 'All Items'
     else:
         items = Items.objects.all().filter(category=category).order_by('name')
 
@@ -46,7 +47,7 @@ def browse(request, category):
         item.image = imageurl.replace("apps/items","",1)
 
     categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-    context = {'categories':categories,'items':items}
+    context = {'categories':categories,'items':items, 'category': category}
     return render(request, 'items/browse.html', context)
 
 def create_deal(request):

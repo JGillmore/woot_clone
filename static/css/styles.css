@@ -63,6 +63,9 @@ footer{
   padding-left: 2.5px !important;
   padding-right: 2.5px !important;
 }
+.categoryHeader{
+  text-align: center;
+}
 
 /* PROFILE PAGE */
 tr td{
