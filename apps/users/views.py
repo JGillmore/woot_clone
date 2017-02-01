@@ -5,7 +5,7 @@ from django.contrib.messages import get_messages
 from django.core.urlresolvers import reverse
 from datetime import date
 
-from ..items.models import Items, Purchases
+from ..items.models import Items, Purchases, Discussions
 from .models import Users
 
 def index(request):
@@ -50,14 +50,15 @@ def logout(request):
 # /static/images/dbitems/544123ae-a77c-4d34-a4b4-5b648b85ad46.jpg
 def profile(request):
     if 'id' in request.session:
-        #comments = Discussions.objects.filter
+        user = Users.objects.get(id=request.session['id'])
+        comments = Discussions.objects.filter(user=user)
         user = Users.objects.get(id=request.session['id'])
         purchased_items = Purchases.objects.filter(status='closed').filter(user=user)
         for item in purchased_items:
             imageurl = str(item.item.image)
             item.item.image = imageurl.replace("apps/items","",1)
         birth_date = str(user.birth_date)
-        context = {'user':user, 'birth_date':birth_date, 'purchased_items':purchased_items}
+        context = {'user':user, 'comments':comments, 'birth_date':birth_date, 'purchased_items':purchased_items}
         return render(request, 'users/profile.html', context)
     return redirect('users:login')
 
