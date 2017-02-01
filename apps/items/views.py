@@ -39,9 +39,11 @@ def browse(request, category):
         items = Items.objects.all().order_by('category').order_by('name')
     else:
         items = Items.objects.all().filter(category=category).order_by('name')
+
     for item in items:
         imageurl = str(item.image)
         item.image = imageurl.replace("apps/items","",1)
+
     context = {'items':items}
     return render(request, 'items/browse.html', context)
 
@@ -82,7 +84,7 @@ def cart(request):
                 else:
                     messages.error(request, 'Card rejected')
                 return redirect('items:cart')
-        return render(request, 'items/cart.html', {'cart_items': cart_items, 'rating': rating, 'form': form, 'sum_total':sum_total})
+        return render(request, 'items/cart.html', {'cart_items': cart_items, 'form': form, 'sum_total':sum_total})
     return redirect('users:index')
 
 def remove_cart(request, id):
@@ -132,6 +134,7 @@ def add_cart(request, id):
         return redirect('/cart')
     except:
         return redirect('users:index')
+
 def add_discussion(request):
     try:
          discussion = request.POST['discussion']
@@ -155,6 +158,7 @@ def add_rating(request):
         return redirect('items:item', id=item)
     except:
         return redirect('users:index')
+
 def add_item(request):
     if request.method == 'POST':
         Items.objects.add(request.POST['name'], request.POST['description'], request.POST['price'], request.POST['units'], request.POST['category'], request.FILES['image'])
