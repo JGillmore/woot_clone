@@ -7,11 +7,12 @@
 		{% for m in messages %}
 		<h1>{{m}}</h1>
 		{% endfor %}
-		<h4>{{item.name}}</h4>
-		<h5>Units {{items_left}} out of {{item.units}}</h5>
-
-		{% load static %}
-		<img src="{{item.image}}" alt="{{item.name}}">
+		<div class="itemInfo">
+			<h4>{{item.name}}</h4>
+			<h5>Units {{items_left}} out of {{item.units}}</h5>
+			{% load static %}
+			<img src="{{item.image}}" alt="{{item.name}}">
+		</div>
 		<h4>Price:${{item.price}}</h4>
 		<form method="POST" action="/add_cart/{{item.id}}">
 		{% csrf_token %}
@@ -52,52 +53,52 @@
 				<button class='btn btn-default' type="submit">Submit rating</button>
 			</form>
 		<p>{{item.description}}</p>
-		  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-		  <script type="text/javascript">
-		  	google.charts.load('current', {packages: ['corechart', 'bar']});
-				google.charts.setOnLoadCallback(drawRightY);
-				function drawRightY() {
-					var data = {{chart_data|safe}};
-      		var data = google.visualization.arrayToDataTable(data);
-		      var options = {
-		        chart: {
-		          title: 'Items sold per hour',
-		        },
-		        hAxis: {
-		          title: 'Items Sold',
-		          minValue: 0,
-		        },
-		        vAxis: {
-                minValue:0,
-                viewWindowMode: "explicit",
-                title: 'Hour',
-                viewWindow: {
-                    min: 0
-                }
-            },
-		        bars: 'vertical',
-		        axes: {
-		          y: {
-		            0: {side: 'bottom'}
-		          }
-		        }
-		      };
-		      var material = new google.charts.Bar(document.getElementById('chart_div'));
-		      material.draw(data, options);
-		    }
-		  </script>
-  <div id="chart_div"></div>
-		<form action="/add_discussion" method="POST">
-		{% csrf_token %}
-			<label for="discussion">Add Discussion</label>
-			<textarea name="discussion"></textarea>
-			<input type="hidden" name="hidden_id" value="{{item.id}}">
-			<button class='btn btn-default' type="submit">Add discussion</button>
-		</form>
-		{% for d in discussion %}
-			<h6>{{d.user.first_name}}</h6>
-			<h6 class="thin">{{d.created_at}}</h6>
-			<p style="padding-left: 2em;">{{d.discussion}}</p>
-		{% endfor %}
-	</div>
+		<div id="chart_div"></div>
+			<form action="/add_discussion" method="POST">
+			{% csrf_token %}
+				<label for="discussion">Add Discussion</label>
+				<textarea class="form-control" name="discussion"></textarea>
+				<input type="hidden" name="hidden_id" value="{{item.id}}">
+				<button class='btn btn-default' type="submit">Submit</button>
+			</form>
+			{% for d in discussion %}
+				<h6>{{d.user.first_name}}</h6>
+				<h6 class="thin">{{d.created_at}}</h6>
+				<p style="padding-left: 2em;">{{d.discussion}}</p>
+			{% endfor %}
+		</div>
+	  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	  <script type="text/javascript">
+	  	google.charts.load('current', {packages: ['corechart', 'bar']});
+			google.charts.setOnLoadCallback(drawRightY);
+			function drawRightY() {
+				var data = {{chart_data|safe}};
+    		var data = google.visualization.arrayToDataTable(data);
+	      var options = {
+	        chart: {
+	          title: 'Items sold per hour',
+	        },
+	        hAxis: {
+	          title: 'Items Sold',
+	          minValue: 0,
+	        },
+	        vAxis: {
+              minValue:0,
+              viewWindowMode: "explicit",
+              title: 'Hour',
+              viewWindow: {
+                  min: 0
+              }
+          },
+	        bars: 'vertical',
+	        axes: {
+	          y: {
+	            0: {side: 'bottom'}
+	          }
+	        }
+	      };
+	      var material = new google.charts.Bar(document.getElementById('chart_div'));
+	      material.draw(data, options);
+	    }
+	  </script>
 {% endblock %}

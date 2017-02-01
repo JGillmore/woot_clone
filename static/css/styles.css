@@ -47,6 +47,11 @@ footer{
   margin-bottom: 35px;
 }
 
+/* ITEM PAGE */
+.itemInfo{
+  text-align: center;
+}
+
 /* BROWSE PAGE */
 .item{
   border: 1px solid #F8F8F8;
@@ -97,7 +102,7 @@ hr{
 label[for=id_expiration_0]{
   display: block;
 }
-.btn-success{
+.btn{
   margin-top: 3px;
 }
 
