@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 from django.db import models
 from ..users.models import *
 import settings
+import stripe
+
+stripe.api_key = settings.STRIPE_API_KEY
 
 class ItemsManager(models.Manager):
 	def validate(self, name, description, price, units, category, image):
@@ -31,15 +34,6 @@ class Items(models.Model):
 	objects = ItemsManager()
 
 class Purchases(models.Model):
-	def __init__(self, *args, **kwargs):
-		super(Purchases, self).__init__(*args, **kwargs)
-
-		import stripe
-		stripe.api_key = settings.STRIPE_API_KEY
-
-		self.stripe = stripe
-		# HEY GUYS! pip install --index-url https://code.stripe.com --upgrade stripe
-
 	item = models.ForeignKey(Items, related_name='item_purchased')
 	user = models.ForeignKey(Users)
 	status = models.CharField(max_length=255)
@@ -47,38 +41,54 @@ class Purchases(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
-	def charge(self, price_in_cents, number, exp_month, exp_year, cvc):
+	@classmethod
+	def chargeCard(cls, price_in_cents, number, exp_month, exp_year, cvc):
+		try:
+		  	response = stripe.Charge.create(
+				amount = price_in_cents,
+				currency = "usd",
+				card = {
+				  "number" : number,
+				  "exp_month" : exp_month,
+				  "exp_year" : exp_year,
+				  "cvc" : cvc,
+
+				  #### it is recommended to include the address!
+				  #"address_line1" : self.address1,
+				  #"address_line2" : self.address2,
+				  #"address_zip" : self.zip_code,
+				  #"address_state" : self.state,
+				},
+				description='Thank you for your purchase!')
+
+			charge_id = response.id
+			return charge_id
+
+		except stripe.CardError, ce:
+			return False
+
+	def change_order_status(self, charge_id):
 		# Takes a the price and credit card details: number, exp_month, exp_year, cvc. Returns a tuple: (Boolean, Class) where the boolean is if the charge was successful, and the class is response (or error) instance.
 		if self.charge_id: # don't let this be charged twice!
 			return False, Exception(message="Already charged.")
 
-		try:
-		  	response = self.stripe.Charge.create(
-			amount = price_in_cents,
-			currency = "usd",
-			card = {
-			  "number" : number,
-			  "exp_month" : exp_month,
-			  "exp_year" : exp_year,
-			  "cvc" : cvc,
-
-			  #### it is recommended to include the address!
-			  #"address_line1" : self.address1,
-			  #"address_line2" : self.address2,
-			  #"address_zip" : self.zip_code,
-			  #"address_state" : self.state,
-			},
-			description='Thank you for your purchase!')
-
-			self.charge_id = response.id
-
-		except self.stripe.CardError, ce:
-			print ce
-			return False, ce
-
+		self.charge_id = charge_id
 		self.status = 'closed'
 		self.save()
-		return True, response
+		return True
+
+	def send_email(self):
+	        template = get_template('contact_template.txt')
+	        context = Context(self.cleaned_data)
+	        content = template.render(context)
+	        email = EmailMessage(
+	            "New contact form submission",
+	            content,
+	            "Your website" +'',
+	            [''], #Your email account
+	            headers = {'Reply-To': self.cleaned_data['email'] }
+	        )
+	        email.send()
 
 class DiscussionsManager(models.Manager):
 	def validate(self):

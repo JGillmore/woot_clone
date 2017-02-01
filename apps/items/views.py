@@ -3,11 +3,22 @@ from django.core.urlresolvers import reverse
 from django.db.models import Avg, Sum
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.template.loader import get_template
+from django.core.mail import EmailMessage, send_mail
+from django.template import Context
 import datetime
 from forms import CreditCardForm
 from .models import *
 from ..users.models import Users
+from django.db.models import Sum
 from .models import Items, Purchases, Discussions
+
+def send_email(user, cart):
+    template = get_template('contact_template.txt')
+    content = template.render({'first_name': user.first_name, 'purchases': cart})
+    # That email you see below, is suppoed to be the customer's email
+    email = EmailMessage("Your order",	content, "Woot", ['phillipn101@gmail.com'], headers = {'Reply-To': user.email})
+    email.send()
 
 def index(request):
     return render(request, 'items/index.html')
@@ -29,30 +40,37 @@ def create_deal(request):
 def cart(request):
     if 'id' in request.session:
         user = Users.objects.get(id=request.session['id'])
-        cart_items = Purchases.objects.filter(status='open').filter(user=user)
-        rating = "1"
+        cart_items = Purchases.objects.filter(status='open').filter(user=user).prefetch_related('item')
         for item in cart_items:
             imageurl = str(item.item.image)
             item.image = imageurl.replace("apps/items","",1)
         form = CreditCardForm()
 
         if request.method == 'POST':
+            if not cart_items:
+                messages.error(request, 'No items to buy')
+                return redirect('items:cart')
             form = CreditCardForm(request.POST)
             if form.is_valid():
-                for item in user.purchases_set.filter(status='open'):
-                    decimal_price = item.item.price*100
-                    item.charge(int(decimal_price), request.POST['number'], request.POST['expiration_0'], request.POST['expiration_1'], request.POST['cvc'])
-                messages.success(request, 'Products purchased!')
+                total_price = user.purchases_set.filter(status='open').aggregate(Sum('item__price')).get('item__price__sum') * 100
+                charge_id = Purchases.chargeCard(int(total_price), request.POST['number'], request.POST['expiration_0'], request.POST['expiration_1'], request.POST['cvc'])
+                if charge_id:
+                    for item in user.purchases_set.filter(status='open'):
+                        item.change_order_status(charge_id)
+                    messages.success(request, 'Products purchased!')
+                    send_email(user, cart_items)
+                else:
+                    messages.error(request, 'Card rejected')
                 return redirect('items:cart')
         return render(request, 'items/cart.html', {'cart_items': cart_items, 'rating': rating, 'form': form})
-    return redirect('users:index')
+    return redirect('users:login')
 
 def remove_cart(request, id):
     if 'id' in request.session:
         delete = Purchases.objects.get(pk=id)
         delete.delete()
         return redirect('items:cart')
-    return redirect('users:index')    
+    return redirect('users:index')
 
 
 
@@ -81,8 +99,8 @@ def add_cart(request, id):
             Purchases.objects.create(item_id=item, user_id=user, status=status)
             quantity = quantity-1
         return redirect('/cart')
-    except: 
-        return redirect('users:index')        
+    except:
+        return redirect('users:index')
 def add_discussion(request):
     try:
          discussion = request.POST['discussion']
