@@ -21,7 +21,18 @@ def send_email(user, cart):
     email.send()
 
 def index(request):
-    return render(request, 'items/index.html')
+    deal = DealofTheMinute.objects.get(id=1)
+    time_diff = datetime.datetime.now().replace(tzinfo=None) - deal.updated_at.replace(tzinfo=None)
+    if int(time_diff.total_seconds()) > -21570: #this is actually checking to see if the time is over 30 seconds old, a new update is -21600 seconds
+        if deal.item_id == 18:
+            deal.item_id= 3
+        else:
+            deal.item_id= deal.item_id+1
+        deal.save()
+    imageurl = str(deal.item.image)
+    deal.item.image = imageurl.replace("apps/items","",1)
+    context = {'deal':deal}
+    return render(request, 'items/index.html', context)
 
 def browse(request, category):
     if category=='all':
