@@ -39,3 +39,11 @@ footer{
 .layout{
   min-height: calc(100vh - 60px);
 }
+
+/* BROWSE PAGE */
+.item{
+  border: 1px solid #F8F8F8;
+  padding: 0px !important;
+  height: 330px;
+  text-align: center;
+}

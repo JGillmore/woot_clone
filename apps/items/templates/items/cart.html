@@ -3,8 +3,9 @@
 {% block title %}Cart{% endblock %}
 
 {% block content %}
+<h1>{{request.session.name}}'s Cart</h1>
+{% if cart_items %}
 	<div class="row">
-		<h1>{{request.session.name}}'s Cart</h1>
 		<table class = "table table-striped">
 			<col width="10%">
    			<thead>
@@ -30,7 +31,7 @@
       				<td align="right" style="font-size: 1.5em;">Total</td>
       				<td style="font-size: 1.5em;">${{sum_total}}</td>
       				<td></td>
-      			</tr>		
+      			</tr>
    			</tbody>
 		</table>
 	</div>
@@ -55,7 +56,10 @@
 			</ul>
 		</div>
 		{% endif %}
-		<button type="submit" name="button">Purchase</button>
+		<button class='btn btn-success' type="submit" name="button">Purchase</button>
 	</form>
 </div>
+{% else %}
+<p>There are no items in your cart at this moment.</p>
+{% endif %}
 {% endblock %}

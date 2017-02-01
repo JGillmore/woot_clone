@@ -1,11 +1,15 @@
 {% extends 'layout.html' %}
 
+{% block title %}Browse{% endblock %}
+
 {% block content %}
   {% for item in items %}
-    <div>
-      <a href='{% url 'items:item' id=item.id %}'>{{item.name}}
-      <img height=300px width=300px src='{{item.image}}'></a>
-      ${{item.price}}
-    <div>
+    <div class='col-xs-12 col-sm-6 col-md-4 item panel panel-default'>
+      <div class="panel-heading"><a href='{% url 'items:item' id=item.id %}'>{{item.name}}</a></div>
+      <div class="panel-body">
+        <img height=230px width=230px src='{{item.image}}'>
+        <p>${{item.price}}</p>
+      </div>
+    </div>
   {% endfor %}
 {% endblock %}
