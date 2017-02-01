@@ -51,9 +51,9 @@ def logout(request):
 def profile(request):
     if 'id' in request.session:
         user = Users.objects.get(id=request.session['id'])
-        comments = Discussions.objects.filter(user=user)
+        comments = Discussions.objects.filter(user=user).order_by('-created_at')
         user = Users.objects.get(id=request.session['id'])
-        purchased_items = Purchases.objects.filter(status='closed').filter(user=user)
+        purchased_items = Purchases.objects.filter(status='closed').filter(user=user).order_by('-created_at')
         for item in purchased_items:
             imageurl = str(item.item.image)
             item.item.image = imageurl.replace("apps/items","",1)
