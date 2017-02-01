@@ -56,18 +56,41 @@
 				<input type="submit" name="submit" value="Submit Rating">
 			</form>
 		<p>{{item.description}}</p>
-		{% load chart_tags %}
-			{% chart %}
-	    	chxr=0,0,{{chart_max}}
-	     	chxt=y
-	     	chbh=a
-	     	chs=440x220
-	    	cht=bvs
-	     	chco=4D89F9
-	     	chds=0,{{chart_max}}
-	     	chd=t:{{chart_data}}
-	     	chtt=Items+Sold+Per+Hour
-		{% endchart %}
+		  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		  <script type="text/javascript">
+		  	google.charts.load('current', {packages: ['corechart', 'bar']});
+				google.charts.setOnLoadCallback(drawRightY);
+				function drawRightY() {
+					var data = {{chart_data|safe}};
+      		var data = google.visualization.arrayToDataTable(data);
+		      var options = {
+		        chart: {
+		          title: 'Items sold per hour',
+		        },
+		        hAxis: {
+		          title: 'Items Sold',
+		          minValue: 0,
+		        },
+		        vAxis: {
+                minValue:0,
+                viewWindowMode: "explicit",
+                title: 'Hour',
+                viewWindow: {
+                    min: 0
+                }
+            },
+		        bars: 'vertical',
+		        axes: {
+		          y: {
+		            0: {side: 'bottom'}
+		          }
+		        }
+		      };
+		      var material = new google.charts.Bar(document.getElementById('chart_div'));
+		      material.draw(data, options);
+		    }
+		  </script>
+  <div id="chart_div"></div>
 		<form action="/add_discussion" method="POST">
 		{% csrf_token %}
 			<label for="discussion">Add Discussion</label>

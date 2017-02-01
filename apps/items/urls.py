@@ -11,5 +11,6 @@ urlpatterns = [
 	url(r'^add_rating$', add_rating),
 	url(r'^add_discussion$', add_discussion),
 	url(r'^add_cart/(?P<id>\d+$)', add_cart),
-	url(r'^remove_cart/(?P<id>\d+$)', remove_cart)
+	url(r'^remove_cart/(?P<id>\d+$)', remove_cart),
+	url(r'^chart_data/(?P<id>\d+$)', chart_data),
 ]
