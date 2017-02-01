@@ -22,8 +22,24 @@
 List items user has posted in the discussion for:
 <br>
 <h1>Purchase History</h1>
-{% for item in purchased_items %}
-  <p>{{ item.name }}</p>
-  <p>{{ item.price}}</p>
-{% endfor %}
+<table class = "table table-striped">
+      <col width="10%">
+        <thead>
+            <tr>
+              <th></th>
+              <th align="middle">Item</th>
+              <th align="middle">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in purchased_items %}
+            <tr>
+            {% load static %}
+              <td><a href="/item/{{i.item.id}}"><img src="{{i.image}}" alt="{{i.name}}" align="middle" width="140" height="70"></a></td>
+              <td><a href="item/{{i.item.id}}">{{item.name}}</a></td>
+              <td>${{item.price}}</td>
+            </tr>
+          {% endfor %}   
+        </tbody>
+    </table>
 {% endblock %}
