@@ -35,15 +35,24 @@ def browse(request, category):
     return render(request, 'items/browse.html', context)
 
 def create_deal(request):
-    return render(request, 'items/create_deal.html')
+    user = Users.objects.get(id=request.session['id'])
+    if user.admin:
+        return render(request, 'items/create_deal.html')
+    return redirect('items:index')
 
 def cart(request):
     if 'id' in request.session:
         user = Users.objects.get(id=request.session['id'])
+
         cart_items = Purchases.objects.filter(status='open').filter(user=user).prefetch_related('item')
+        sum_total = 0.00
+        rating = "1"
+
         for item in cart_items:
+            sum_total = sum_total + float(item.item.price)
             imageurl = str(item.item.image)
             item.image = imageurl.replace("apps/items","",1)
+        print sum_total
         form = CreditCardForm()
 
         if request.method == 'POST':
@@ -62,8 +71,8 @@ def cart(request):
                 else:
                     messages.error(request, 'Card rejected')
                 return redirect('items:cart')
-        return render(request, 'items/cart.html', {'cart_items': cart_items, 'rating': rating, 'form': form})
-    return redirect('users:login')
+        return render(request, 'items/cart.html', {'cart_items': cart_items, 'rating': rating, 'form': form, 'sum_total':sum_total})
+    return redirect('users:index')
 
 def remove_cart(request, id):
     if 'id' in request.session:

@@ -4,11 +4,6 @@
 
 {% block content %}
 	<div class="row">
-		<a href="/" style="display: inline-block;"><h5>Home</h5></a>
-		<a href="" style="display: inline-block;"><h5>##Category/dropdown##</h5></a>
-		<a href="/user" style="display: inline-block;"><h5>User Account</h5></a>
-	</div>
-	<div class="row">
 		<h1>{{request.session.name}}'s Cart</h1>
 		<table class = "table table-striped">
 			<col width="10%">
@@ -24,12 +19,18 @@
    			{% for i in cart_items %}
       			<tr>
       			{% load static %}
-         			<td><img src="{{i.image}}" alt="{{i.name}}" align="middle" width="140" height="70"></td>
-         			<td>{{i.item.name}}</td>
+         			<td><a href="/item/{{i.item.id}}"><img src="{{i.image}}" alt="{{i.name}}" align="middle" width="140" height="70"></a></td>
+         			<td><a href="item/{{i.item.id}}">{{i.item.name}}</a></td>
          			<td>${{i.item.price}}</td>
          			<td><a href="remove_cart/{{i.id}}"><span class="glyphicon glyphicon-trash" style="color: red; font-size: 2em;"></span></a></td>
       			</tr>
       		{% endfor %}
+      			<tr>
+      				<td></td>
+      				<td align="right" style="font-size: 1.5em;">Total</td>
+      				<td style="font-size: 1.5em;">${{sum_total}}</td>
+      				<td></td>
+      			</tr>		
    			</tbody>
 		</table>
 	</div>
