@@ -32,23 +32,22 @@
 <!-- TODO -->
 <h1>Purchase History</h1>
 <table class = "table table-striped">
-      <col width="10%">
-        <thead>
-            <tr>
-              <th></th>
-              <th align="middle">Item</th>
-              <th align="middle">Price</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for item in purchased_items %}
-            <tr>
-            {% load static %}
-              <td><a href="{% url 'items:item' id=item.item.id %}"><img src="{{item.item.image}}" alt="{{item.item.name}}" align="middle" width="140" height="70"></a></td>
-              <td><a href="{% url 'items:item' id=item.item.id %}">{{item.item.name}}</a></td>
-              <td>${{item.item.price}}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-    </table>
+  <thead>
+    <tr>
+      <th class='headerImage'></th>
+      <th align="middle">Item</th>
+      <th align="middle">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for item in purchased_items %}
+      <tr>
+      {% load static %}
+        <td class='cellPic'><a href="{% url 'items:item' id=item.item.id %}"><img class='img-thumbnail tablePics' src="{{item.item.image}}" alt="{{item.item.name}}" align="middle"></a></td>
+        <td class='cellName'><a href="{% url 'items:item' id=item.item.id %}">{{item.item.name}}</a></td>
+        <td class='cellPrice'>${{item.item.price}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
