@@ -22,7 +22,7 @@
 			<select name="quantity">
 				<option value="1">1</option>
 				<option value="2">2</option>
-				<option value="2">3</option>
+				<option value="3">3</option>
 				<option value="4">4</option>
 				<option value="5">5</option>
 			</select>
@@ -56,6 +56,18 @@
 				<input type="submit" name="submit" value="Submit Rating">
 			</form>
 		<p>{{item.description}}</p>
+		{% load chart_tags %}
+			{% chart %}
+	    	chxr=0,0,{{chart_max}}
+	     	chxt=y
+	     	chbh=a
+	     	chs=440x220
+	    	cht=bvs
+	     	chco=4D89F9
+	     	chds=0,{{chart_max}}
+	     	chd=t:{{chart_data}}
+	     	chtt=Items+Sold+Per+Hour
+		{% endchart %}
 		<form action="/add_discussion" method="POST">
 		{% csrf_token %}
 			<label for="discussion">Add Discussion</label>

@@ -102,11 +102,24 @@ def item(request, id):
     imageurl = str(item.image)
     item.image = imageurl.replace("apps/items","",1)
     rating_avg = Ratings.objects.filter(item_id=item).aggregate(Avg('rating'))
+    chart_max = 4
+    chart_data =''
+    hour = 0
+    while hour<24:
+        h = Purchases.objects.filter(item_id=id).filter(status='closed').filter(updated_at__hour=hour).count()
+        if hour == 23:
+            chart_data += str(h)
+        else:
+            chart_data += str(h)+','
+        if int(h)> chart_max:
+            chart_max = int(h)
+        hour+=1
+    print chart_data  
     try:
         r = Ratings.objects.get(user_id=request.session['id'],item_id=id)
     except:
         r = 0
-    context = {'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': r}
+    context = {'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': r, 'chart_max':chart_max, 'chart_data':chart_data}
     return render(request, 'items/item.html', context)
 
 def add_cart(request, id):
@@ -156,3 +169,5 @@ def add_item(request):
     # imageurl = str(item.image)
     # item.image = imageurl.replace("apps/items","",1)
     # context = {'item':item, 'imageurl':imageurl}
+
+#pip install django-chart-tools
