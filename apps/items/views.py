@@ -17,7 +17,7 @@ def send_email(user, cart):
     template = get_template('contact_template.txt')
     content = template.render({'first_name': user.first_name, 'purchases': cart})
     # That email you see below, is suppoed to be the customer's email
-    email = EmailMessage("Your order",	content, "Woot", ['wootclone.dojo@gmail.com'], headers = {'Reply-To': user.email})
+    email = EmailMessage("Your order",	content, "Woot", [user.email], headers = {'Reply-To': 'wootclone.dojo@gmail.com'})
     email.send()
 
 def index(request):
