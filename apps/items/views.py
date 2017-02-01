@@ -50,7 +50,9 @@ def browse(request, category):
 def create_deal(request):
     user = Users.objects.get(id=request.session['id'])
     if user.admin:
-        return render(request, 'items/create_deal.html')
+        items = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+        context = {'items':items}
+        return render(request, 'items/create_deal.html', context)
     return redirect('items:index')
 
 def cart(request):
@@ -114,7 +116,7 @@ def item(request, id):
         if int(h)> chart_max:
             chart_max = int(h)
         hour+=1
-    print chart_data  
+    print chart_data
     try:
         r = Ratings.objects.get(user_id=request.session['id'],item_id=id)
     except:

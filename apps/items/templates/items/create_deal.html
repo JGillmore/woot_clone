@@ -13,7 +13,11 @@
   <br>
   Amount to sell:--<input type='text' name='units'>
   <br>
-  Category:---------<input type='text' name='category'>
+  Category:---------<select name='category'>
+    {% for item in items %}
+      <option value="{{item}}">{{item}}</option>
+    {% endfor %}
+  </select>
   <br>
   Image:-------------<input type='file' name='image'>
   <br>
