@@ -72,6 +72,13 @@ tr td{
   max-width: 100px;
   max-height: 100px;
 }
+.comment p{
+  margin-left: 40px;
+}
+hr{
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
 
 /* CC FORM */
 #id_expiration_0, #id_expiration_1{

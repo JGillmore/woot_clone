@@ -4,6 +4,7 @@
 
 {% block content %}
 <h1>Edit Information</h1>
+<hr>
 <form action='{% url "users:update_info" %}' method='post'>
   {% csrf_token %}
   <div class="col-10 form-group">
@@ -27,10 +28,20 @@
 {% if user.admin %}
   <a href='{% url "items:create_deal" %}'>Add a Deal</a>
 {% endif %}
-<h1>List items user has posted in the discussion for:</h1>
-<br>
-<!-- TODO -->
+<h1>My Comments</h1>
+<hr>
+{% if comments %}
+  {% for comment in comments %}
+    <div class="comment">
+      <h5>Comment on {{ comment.item.name }} at <small>{{ comment.created_at }}</small></h5>
+      <p>{{ comment.discussion }}</p>
+    </div>
+  {% endfor %}
+{% else %}
+  <p>You have no product comments</p>
+{% endif %}
 <h1>Purchase History</h1>
+<hr>
 <table class = "table table-striped">
   <thead>
     <tr>
