@@ -50,8 +50,8 @@ def browse(request, category):
 def create_deal(request):
     user = Users.objects.get(id=request.session['id'])
     if user.admin:
-        items = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-        context = {'items':items}
+        categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+        context = {'categories':categories}
         return render(request, 'items/create_deal.html', context)
     return redirect('items:index')
 

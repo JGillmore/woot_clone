@@ -14,8 +14,8 @@
   Amount to sell:--<input type='text' name='units'>
   <br>
   Category:---------<select name='category'>
-    {% for item in items %}
-      <option value="{{item}}">{{item}}</option>
+    {% for category in categories %}
+      <option value="{{category}}">{{category}}</option>
     {% endfor %}
   </select>
   <br>
