@@ -4,11 +4,13 @@
 
 {% block content %}
   {% for item in items %}
-    <div class='col-xs-12 col-sm-6 col-md-4 item panel panel-default'>
-      <div class="panel-heading"><a href='{% url 'items:item' id=item.id %}'>{{item.name}}</a></div>
-      <div class="panel-body">
-        <img height=230px width=230px src='{{item.image}}'>
-        <p>${{item.price}}</p>
+    <div class='itemWrap col-xs-12 col-sm-6 col-md-4'>
+      <div class="item panel panel-default">
+        <div class="panel-heading"><a href='{% url 'items:item' id=item.id %}'>{{item.name}}</a></div>
+        <div class="panel-body">
+          <img height=230px width=230px src='{{item.image}}'>
+          <p>${{item.price}}</p>
+        </div>
       </div>
     </div>
   {% endfor %}

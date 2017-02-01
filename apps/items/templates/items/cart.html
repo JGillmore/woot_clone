@@ -7,10 +7,9 @@
 {% if cart_items %}
 	<div class="row">
 		<table class = "table table-striped">
-			<col width="10%">
    			<thead>
       			<tr>
-         			<th></th>
+         			<th class='headerImage'></th>
          			<th align="middle">Item</th>
          			<th align="middle">Price</th>
          			<th align="middle">Remove</th>
@@ -20,10 +19,10 @@
    			{% for i in cart_items %}
       			<tr>
       			{% load static %}
-         			<td><a href="/item/{{i.item.id}}"><img src="{{i.image}}" alt="{{i.name}}" align="middle" width="140" height="70"></a></td>
+         			<td class='cellPic'><a href="/item/{{i.item.id}}"><img class='img-thumbnail tablePics'src="{{i.image}}" alt="{{i.name}}" align="middle"></a></td>
          			<td><a href="item/{{i.item.id}}">{{i.item.name}}</a></td>
          			<td>${{i.item.price}}</td>
-         			<td><a href="remove_cart/{{i.id}}"><span class="glyphicon glyphicon-trash" style="color: red; font-size: 2em;"></span></a></td>
+         			<td class='trash'><a href="remove_cart/{{i.id}}"><span class="glyphicon glyphicon-trash" style="color: red; font-size: 2em;"></span></a></td>
       			</tr>
       		{% endfor %}
       			<tr>
@@ -38,7 +37,6 @@
 	{% for message in messages %}
 		<p class='{{ message.tags }}'>{{message}}</p>
 	{% endfor %}
-	<h5>Enter Credit Card Info. Here</h5>
 	<form method="post">
 		{% csrf_token %}
 		{% for field in form %}

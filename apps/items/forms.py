@@ -73,3 +73,9 @@ class CreditCardForm(forms.Form):
     expiration = CCExpField(required=True, label="Expiration")
     cvc = forms.IntegerField(required=True, label="CCV Number",
         max_value=9999, widget=forms.TextInput(attrs={'size': '4'}))
+
+    def __init__(self, *args, **kwargs):
+        super(CreditCardForm, self).__init__(*args, **kwargs)
+        self.fields['number'].widget.attrs.update({'class': 'form-control'})
+        self.fields['expiration'].widget.attrs.update({'class': 'form-control'})
+        self.fields['cvc'].widget.attrs.update({'class': 'form-control'})

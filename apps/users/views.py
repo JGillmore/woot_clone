@@ -50,6 +50,7 @@ def logout(request):
 # /static/images/dbitems/544123ae-a77c-4d34-a4b4-5b648b85ad46.jpg
 def profile(request):
     if 'id' in request.session:
+        #comments = Discussions.objects.filter
         user = Users.objects.get(id=request.session['id'])
         purchased_items = Purchases.objects.filter(status='closed').filter(user=user)
         for item in purchased_items:
