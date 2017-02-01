@@ -33,8 +33,8 @@
 {% if comments %}
   {% for comment in comments %}
     <div class="comment">
-      <h5>Comment on {{ comment.item.name }} at <small>{{ comment.created_at }}</small></h5>
-      <p>{{ comment.discussion }}</p>
+      <h5>Comment on <a href='{% url 'items:item' id=comment.item.id %}'>{{comment.item.name}}</a> at <small>{{comment.created_at}}</small></h5>
+      <p>{{comment.discussion}}</p>
     </div>
   {% endfor %}
 {% else %}

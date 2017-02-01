@@ -89,7 +89,7 @@ def cart(request):
                 else:
                     messages.error(request, 'Card rejected')
                 return redirect('items:cart')
-            categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+        categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
         return render(request, 'items/cart.html', {'cart_items': cart_items, 'form': form, 'sum_total':sum_total, 'categories':categories})
     return redirect('users:index')
 
