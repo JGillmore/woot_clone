@@ -3,6 +3,9 @@
 {% block title %}Item{% endblock %}
 
 {% block content %}
+{% for message in messages %}
+  <p class='{{ message.tags }}'>{{message}}</p>
+{% endfor %}
 <div>
   <a href='{% url "items:item" id=deal.item.id %}'>{{deal.item.name}}
     <img height=300px width=300px src='{{deal.item.image}}'>

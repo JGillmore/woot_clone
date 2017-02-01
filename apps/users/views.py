@@ -22,6 +22,7 @@ def login(request):
         if Users.objects.login(request,email,password):
             request.session['today']=date.today().strftime('%b %d, %Y')
             request.session['restrictday']=str(date.today())
+            messages.success(request, 'Login successful')
             return redirect(reverse('items:index'))
     return redirect('users:index')
 

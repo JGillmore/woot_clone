@@ -30,9 +30,12 @@ footer{
 }
 .error{
   color: red;
+  font-size: 18px;
+
 }
 .success{
   color: green;
+  font-size: 18px;
 }
 
 /* HOME PAGE */
@@ -46,4 +49,15 @@ footer{
   padding: 0px !important;
   height: 330px;
   text-align: center;
+}
+.panel-body p{
+  margin-bottom: 0px;
+  position: absolute;
+  bottom: 0;
+  left: 42%
+}
+
+/* PROFILE PAGE */
+tr td{
+  vertical-align: middle !important;
 }
