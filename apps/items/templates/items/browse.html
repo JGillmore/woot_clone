@@ -17,4 +17,14 @@
       </a>
     </div>
   {% endfor %}
+  {% if is_paginated %}
+      <div class="pagination">
+        <div class="page-links">
+          {% for page in page_obj.paginator.page_range %}
+            {% if forloop.counter != 1 %} | {% endif %}
+            <a href="{% url 'items:browse' category=category %}?page={{ page }}">{{ page }}</a>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
 {% endblock %}

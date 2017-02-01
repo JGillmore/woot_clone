@@ -4,8 +4,8 @@ from django.db.models import Avg, Sum
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
+from django.views.generic import ListView
 from django.core.mail import EmailMessage, send_mail
-from django.template import Context
 import datetime
 from forms import CreditCardForm
 from .models import *
@@ -35,20 +35,30 @@ def index(request):
     context = {'categories':categories,'deal':deal}
     return render(request, 'items/index.html', context)
 
-def browse(request, category):
-    if category=='all':
-        items = Items.objects.all().order_by('category').order_by('name')
-        category = 'All Items'
-    else:
-        items = Items.objects.all().filter(category=category).order_by('name')
+class BrowseView(ListView):
+    model = Items
+    template_name = 'items/browse.html'
+    context_object_name = "items"
+    paginate_by = 10
 
-    for item in items:
-        imageurl = str(item.image)
-        item.image = imageurl.replace("apps/items","",1)
+    def get_queryset(self):
+        if self.kwargs['category']=='all':
+            queryset = Items.objects.all().order_by('category').order_by('name')
+        else:
+            queryset = Items.objects.all().filter(category=self.kwargs['category']).order_by('name')
 
-    categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-    context = {'categories':categories,'items':items, 'category': category}
-    return render(request, 'items/browse.html', context)
+        for item in queryset:
+            imageurl = str(item.image)
+            item.image = imageurl.replace("apps/items","",1)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(BrowseView, self).get_context_data(**kwargs)
+        context['category'] = self.kwargs['category']
+        categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+        context['categories'] = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+        return context
 
 def create_deal(request):
     user = Users.objects.get(id=request.session['id'])
