@@ -44,9 +44,9 @@
         {% for item in purchased_items %}
             <tr>
             {% load static %}
-              <td><a href="/item/{{i.item.id}}"><img src="{{i.image}}" alt="{{i.name}}" align="middle" width="140" height="70"></a></td>
-              <td><a href="item/{{i.item.id}}">{{item.name}}</a></td>
-              <td>${{item.price}}</td>
+              <td><a href="{% url 'items:item' id=item.item.id %}"><img src="{{item.item.image}}" alt="{{item.item.name}}" align="middle" width="140" height="70"></a></td>
+              <td><a href="{% url 'items:item' id=item.item.id %}">{{item.item.name}}</a></td>
+              <td>${{item.item.price}}</td>
             </tr>
           {% endfor %}
         </tbody>
