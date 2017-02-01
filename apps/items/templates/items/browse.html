@@ -1,11 +1,20 @@
 {% extends 'layout.html' %}
 
+{% block title %}Browse{% endblock %}
+
 {% block content %}
+  <h1 class='categoryHeader'>{{ category.capitalize }}</h1>
   {% for item in items %}
-    <div>
-      <a href='{% url 'items:item' id=item.id %}'>{{item.name}}
-      <img height=300px width=300px src='{{item.image}}'></a>
-      ${{item.price}}
-    <div>
+    <div class='itemWrap col-xs-12 col-sm-6 col-md-4'>
+      <a href='{% url 'items:item' id=item.id %}'>
+        <div class="item panel panel-default">
+          <div class="panel-heading">{{item.name}}</div>
+          <div class="panel-body">
+            <img height=200px width=200px src='{{item.image}}'>
+            <p>${{item.price}}</p>
+          </div>
+        </div>
+      </a>
+    </div>
   {% endfor %}
 {% endblock %}

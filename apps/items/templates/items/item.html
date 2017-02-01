@@ -3,10 +3,6 @@
 {% block title %}Item{% endblock %}
 
 {% block content %}
-	<div class="row">
-		<a href="/" style="display: inline-block;"><h5>Home</h5></a>
-		<a href="/browse/{{item.category}}" style="display: inline-block;"><h5>##Category##</h5></a>
-	</div>
 	<div class="row align center" style="margin-bottom: 70px;">
 		{% for m in messages %}
 		<h1>{{m}}</h1>
@@ -26,7 +22,7 @@
 				<option value="4">4</option>
 				<option value="5">5</option>
 			</select>
-			<input type="submit" name="submit" value="Add To Cart">
+			<button class='btn btn-success' type="submit">Add to cart</button>
 		</form>
 		<h4>Item Rating: {{rating_avg.rating__avg}}</h4>
 		<p>{% if not r == 0 %}Update your rating of product{% endif %}</p>
@@ -53,7 +49,7 @@
     				<label for="rating5"><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span></label>
  				</p>
  				<input type="hidden" name="hidden" value="{{item.id}}">
-				<input type="submit" name="submit" value="Submit Rating">
+				<button class='btn btn-default' type="submit">Submit rating</button>
 			</form>
 		<p>{{item.description}}</p>
 		  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -96,12 +92,12 @@
 			<label for="discussion">Add Discussion</label>
 			<textarea name="discussion"></textarea>
 			<input type="hidden" name="hidden_id" value="{{item.id}}">
-			<input type="submit" name="submit" value="Add Discussion">
+			<button class='btn btn-default' type="submit">Add discussion</button>
 		</form>
 		{% for d in discussion %}
 			<h6>{{d.user.first_name}}</h6>
 			<h6 class="thin">{{d.created_at}}</h6>
 			<p style="padding-left: 2em;">{{d.discussion}}</p>
 		{% endfor %}
-	</div>	
+	</div>
 {% endblock %}

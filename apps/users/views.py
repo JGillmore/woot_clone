@@ -5,11 +5,12 @@ from django.contrib.messages import get_messages
 from django.core.urlresolvers import reverse
 from datetime import date
 
-from ..items.models import Items
+from ..items.models import Items, Purchases, Discussions
 from .models import Users
 
 def index(request):
-    context = {}
+    categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+    context = {'categories':categories}
     request.session['restrictday']=str(date.today())
     if messages:
         context['messages']=get_messages(request)
@@ -22,6 +23,7 @@ def login(request):
         if Users.objects.login(request,email,password):
             request.session['today']=date.today().strftime('%b %d, %Y')
             request.session['restrictday']=str(date.today())
+            messages.success(request, 'Login successful')
             return redirect(reverse('items:index'))
     return redirect('users:index')
 
@@ -49,9 +51,15 @@ def logout(request):
 def profile(request):
     if 'id' in request.session:
         user = Users.objects.get(id=request.session['id'])
-        purchased_items = Items.objects.filter(item_purchased__status='closed').filter(item_purchased__user=user)
+        comments = Discussions.objects.filter(user=user).order_by('-created_at')
+        user = Users.objects.get(id=request.session['id'])
+        purchased_items = Purchases.objects.filter(status='closed').filter(user=user).order_by('-created_at')
+        for item in purchased_items:
+            imageurl = str(item.item.image)
+            item.item.image = imageurl.replace("apps/items","",1)
         birth_date = str(user.birth_date)
-        context = {'user':user, 'birth_date':birth_date, 'purchased_items':purchased_items}
+        categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+        context = {'categories':categories, 'comments':comments, 'user':user, 'birth_date':birth_date, 'purchased_items':purchased_items}
         return render(request, 'users/profile.html', context)
     return redirect('users:login')
 

@@ -18,7 +18,7 @@ def send_email(user, cart):
     template = get_template('contact_template.txt')
     content = template.render({'first_name': user.first_name, 'purchases': cart})
     # That email you see below, is suppoed to be the customer's email
-    email = EmailMessage("Your order",	content, "Woot", ['wootclone.dojo@gmail.com'], headers = {'Reply-To': user.email})
+    email = EmailMessage("Your order",	content, "Woot", [user.email], headers = {'Reply-To': 'wootclone.dojo@gmail.com'})
     email.send()
 
 def index(request):
@@ -32,12 +32,14 @@ def index(request):
         deal.save()
     imageurl = str(deal.item.image)
     deal.item.image = imageurl.replace("apps/items","",1)
-    context = {'deal':deal}
+    categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+    context = {'categories':categories,'deal':deal}
     return render(request, 'items/index.html', context)
 
 def browse(request, category):
     if category=='all':
         items = Items.objects.all().order_by('category').order_by('name')
+        category = 'All Items'
     else:
         items = Items.objects.all().filter(category=category).order_by('name')
 
@@ -45,13 +47,16 @@ def browse(request, category):
         imageurl = str(item.image)
         item.image = imageurl.replace("apps/items","",1)
 
-    context = {'items':items}
+    categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+    context = {'categories':categories,'items':items, 'category': category}
     return render(request, 'items/browse.html', context)
 
 def create_deal(request):
     user = Users.objects.get(id=request.session['id'])
     if user.admin:
-        return render(request, 'items/create_deal.html')
+        categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+        context = {'categories':categories}
+        return render(request, 'items/create_deal.html', context)
     return redirect('items:index')
 
 def cart(request):
@@ -85,7 +90,8 @@ def cart(request):
                 else:
                     messages.error(request, 'Card rejected')
                 return redirect('items:cart')
-        return render(request, 'items/cart.html', {'cart_items': cart_items, 'form': form, 'sum_total':sum_total})
+        categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+        return render(request, 'items/cart.html', {'cart_items': cart_items, 'form': form, 'sum_total':sum_total, 'categories':categories})
     return redirect('users:index')
 
 def remove_cart(request, id):

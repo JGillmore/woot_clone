@@ -3,43 +3,62 @@
 {% block title %}User{% endblock %}
 
 {% block content %}
-<a href='{% url "users:logout" %}'>Logout</a>
+<h1>Edit Information</h1>
+<hr>
 <form action='{% url "users:update_info" %}' method='post'>
   {% csrf_token %}
-  Email:--------------- <input type='text' name='email' value='{{user.email}}'>
-  <br>
-  First Name:--------- <input type='text' name='first_name' value='{{user.first_name}}'>
-  <br>
-  Last Name:--------- <input type='text' name='last_name' value='{{user.last_name}}'>
-  <br>
-  Birth Date: <input type = 'date'  name='birth_date' value='{{user.birth_date|date:"Y-m-d"}}'max='{{request.session.restrictday}}'>
-  <input type='submit' name='button' value='Update'>
+  <div class="col-10 form-group">
+    <label>Email</label>
+    <input class='form-control' type='text' name='email' value='{{user.email}}'>
+  </div>
+  <div class="col-10 form-group">
+    <label>First Name</label>
+    <input class='form-control' type='text' name='first_name' value='{{user.first_name}}'>
+  </div>
+  <div class="col-10 form-group">
+    <label>Last Name</label>
+    <input class='form-control' type='text' name='last_name' value='{{user.last_name}}'>
+  </div>
+  <div class="col-10 form-group">
+    <label>Birthday</label>
+    <input class='form-control' type='date' name='birth_date' value='{{user.birth_date|date:"Y-m-d"}}' max='{{request.session.restrictday}}'>
+  </div>
+  <button class='btn btn-default' type="submit">Update</button>
 </form>
 {% if user.admin %}
   <a href='{% url "items:create_deal" %}'>Add a Deal</a>
 {% endif %}
-<br>
-List items user has posted in the discussion for:
-<br>
+<h1>My Comments</h1>
+<hr>
+{% if comments %}
+  {% for comment in comments %}
+    <div class="comment">
+      <h5>Comment on <a href='{% url 'items:item' id=comment.item.id %}'>{{comment.item.name}}</a> at <small>{{comment.created_at}}</small></h5>
+      <p>{{comment.discussion}}</p>
+    </div>
+  {% endfor %}
+{% else %}
+  <p>You have no product comments</p>
+{% endif %}
 <h1>Purchase History</h1>
+<hr>
 <table class = "table table-striped">
-      <col width="10%">
-        <thead>
-            <tr>
-              <th></th>
-              <th align="middle">Item</th>
-              <th align="middle">Price</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for item in purchased_items %}
-            <tr>
-            {% load static %}
-              <td><a href="/item/{{i.item.id}}"><img src="{{i.image}}" alt="{{i.name}}" align="middle" width="140" height="70"></a></td>
-              <td><a href="item/{{i.item.id}}">{{item.name}}</a></td>
-              <td>${{item.price}}</td>
-            </tr>
-          {% endfor %}   
-        </tbody>
-    </table>
+  <thead>
+    <tr>
+      <th class='headerImage'></th>
+      <th align="middle">Item</th>
+      <th align="middle">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for item in purchased_items %}
+      <tr>
+      {% load static %}
+        <td class='cellPic'><a href="{% url 'items:item' id=item.item.id %}"><img class='img-thumbnail tablePics' src="{{item.item.image}}" alt="{{item.item.name}}" align="middle"></a></td>
+        <td class='cellName'><a href="{% url 'items:item' id=item.item.id %}">{{item.item.name}}</a></td>
+        <td class='cellPrice'>${{item.item.price}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

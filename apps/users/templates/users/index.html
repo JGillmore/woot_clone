@@ -8,31 +8,49 @@
     {% endif %}
   {% endfor %}
   <form action='{% url "users:register" %}' method='post'>
-    {% csrf_token %}
-    Email:--------------- <input type='text' name='email'>
-    <br>
-    First Name:--------- <input type='text' name='first_name'>
-    <br>
-    Last Name:--------- <input type='text' name='last_name'>
-    <br>
-    Password:----------- <input type='password' name='password'>
-    <br>
-    Confirm Password: <input type='password' name='confirmpassword'>
-    <p>Birth Date: <input type = 'date'  name='birth_date' max='{{request.session.restrictday}}'></p>
-    <input type='submit' name='button' value='Submit'>
+    <div class="col-10 form-group">
+      <label>Email</label>
+      <input class='form-control' type='text' name='email' value='{{user.email}}'>
+    </div>
+    <div class="col-10 form-group">
+      <label>First Name</label>
+      <input class='form-control' type='text' name='first_name' value='{{user.first_name}}'>
+    </div>
+    <div class="col-10 form-group">
+      <label>Last Name</label>
+      <input class='form-control' type='text' name='last_name' value='{{user.last_name}}'>
+    </div>
+    <div class="col-10 form-group">
+      <label>Birthday</label>
+      <input class='form-control' type='date' name='birth_date' value='{{user.birth_date|date:"Y-m-d"}}' max='{{request.session.restrictday}}'>
+    </div>
+    <div class="col-10 form-group">
+      <label>Password</label>
+      <input class='form-control' type='password' name='password'>
+    </div>
+    <div class="col-10 form-group">
+      <label>Password Confirm</label>
+      <input class='form-control' type='password' name='confirmpassword'>
+    </div>
+    <button class='btn btn-default'type="submit" name="button">Submit</button>
   </form>
 
-  <h1>login</h1>
+  <h1>Login</h1>
   {% for message in messages %}
     {% if message.tags == 'error' %}
-    <p class='error'>{{message}}</p>
+      <p class='error'>{{message}}</p>
     {% endif %}
   {% endfor %}
   <form action='{% url "users:login" %}' method='post'>
     {% csrf_token %}
-    Email:--------------- <input type='text' name='email'>
-    <br>
-    Password:----------- <input type='password' name='password'>
-    <input type='submit' name='button' value='Submit'>
+    <div class="col-10 form-group">
+      <label>Email</label>
+      <input class='form-control' type='text' name='email'>
+    </div>
+    <div class="col-10 form-group">
+      <label>Password</label>
+      <input class='form-control' type='password' name='password'>
+    </div>
+    <button class='btn btn-default'type="submit" name="button">Submit</button>
   </form>
 {% endblock %}

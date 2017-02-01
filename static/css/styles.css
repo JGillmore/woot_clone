@@ -1,8 +1,4 @@
 /* GENERAL */
-* {
-    margin:0;
-    padding:0;
-}
 .wrapper{
   margin-top: 100px;
 }
@@ -15,7 +11,9 @@
 .panel-heading, .jumbotron{
   text-align: center;
 }
-
+#navbar{
+  background: #F8F8F8;
+}
 
 
 /* FOOTER */
@@ -30,12 +28,75 @@ footer{
 }
 .error{
   color: red;
+  font-size: 18px;
+
 }
 .success{
   color: green;
+  font-size: 18px;
 }
 
 /* HOME PAGE */
 .layout{
   min-height: calc(100vh - 60px);
+  margin-bottom: 35px;
+}
+
+/* BROWSE PAGE */
+.item{
+  border: 1px solid #F8F8F8;
+  padding: 0px !important;
+  height: 330px;
+  text-align: center;
+}
+.panel-body p{
+  margin-bottom: 0px;
+  position: absolute;
+  bottom: 0;
+  left: 42%
+}
+.panel{
+  margin-bottom: 0px !important;
+}
+.itemWrap{
+  margin-bottom: 5px;
+  padding-left: 2.5px !important;
+  padding-right: 2.5px !important;
+}
+.categoryHeader{
+  text-align: center;
+}
+
+/* PROFILE PAGE */
+tr td{
+  vertical-align: middle !important;
+}
+.tablePics{
+  max-width: 100px;
+  max-height: 100px;
+}
+.comment p{
+  margin-left: 40px;
+}
+hr{
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+/* CC FORM */
+#id_expiration_0, #id_expiration_1{
+  display: inline-block;
+  width: 100px;
+}
+label[for=id_expiration_0]{
+  display: block;
+}
+.btn-success{
+  margin-top: 3px;
+}
+
+@media only screen and (max-width: 500px){
+  .cellPic, .headerImage{
+    display: none !important;
+  }
 }
