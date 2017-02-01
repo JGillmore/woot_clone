@@ -3,7 +3,7 @@ Hey {{ first_name }},
 The following items will be sent to you tomorrow:
 
 {% for purchase in purchases %}
-  - {{ purchase.item.name }}
+  - {{ purchase.item.name|safe|striptags }}
 {% endfor %}
 
 Sincerely,
