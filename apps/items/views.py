@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Avg, Sum
 from django.contrib import messages
@@ -12,6 +12,7 @@ from .models import *
 from ..users.models import Users
 from django.db.models import Sum
 from .models import Items, Purchases, Discussions
+import json
 
 def send_email(user, cart):
     template = get_template('contact_template.txt')
@@ -118,26 +119,30 @@ def item(request, id):
     imageurl = str(item.image)
     item.image = imageurl.replace("apps/items","",1)
     rating_avg = Ratings.objects.filter(item_id=item).aggregate(Avg('rating'))
-    chart_max = 4
-    chart_data =''
+    chart_data =[['Hour', 'Items Sold']]
     hour = 0
     while hour<24:
+        time = ['12am','1am','2am','3am','4am','5am','6am','7am','8am','9am','10am','11am','12pm','1pm','2pm','3pm','4pm','5pm','6pm','7pm','8pm','9pm','10pm','11pm']
         h = Purchases.objects.filter(item_id=id).filter(status='closed').filter(updated_at__hour=hour).count()
-        if hour == 23:
-            chart_data += str(h)
-        else:
-            chart_data += str(h)+','
-        if int(h)> chart_max:
-            chart_max = int(h)
-        hour+=1
-    print chart_data
+        chart_data.append([time[hour],h])
+        hour+=1  
     try:
         r = Ratings.objects.get(user_id=request.session['id'],item_id=id)
     except:
         r = 0
-    categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-    context = {'categories':categories, 'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': r, 'chart_max':chart_max, 'chart_data':chart_data}
+    context = {'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': r, 'chart_data':json.dumps(chart_data)}
     return render(request, 'items/item.html', context)
+
+def chart_data(request, id):
+    chart_data =[['Hour', 'Items Sold']]
+    hour = 0
+    while hour<24:
+        time = ['12am','1am','2am','3am','4am','5am','6am','7am','8am','9am','10am','11am','12pm','1pm','2pm','3pm','4pm','5pm','6pm','7pm','8pm','9pm','10pm','11pm']
+        h = Purchases.objects.filter(item_id=id).filter(status='closed').filter(updated_at__hour=hour).count()
+        chart_data.append([time[hour],h])
+        hour+=1
+    chart_data = json.dumps(chart_data) 
+    return HttpResponse(chart_data)   
 
 def add_cart(request, id):
     try:
