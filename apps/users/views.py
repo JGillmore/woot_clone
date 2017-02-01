@@ -9,7 +9,8 @@ from ..items.models import Items, Purchases
 from .models import Users
 
 def index(request):
-    context = {}
+    categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+    context = {'categories':categories}
     request.session['restrictday']=str(date.today())
     if messages:
         context['messages']=get_messages(request)
@@ -57,7 +58,8 @@ def profile(request):
             imageurl = str(item.item.image)
             item.item.image = imageurl.replace("apps/items","",1)
         birth_date = str(user.birth_date)
-        context = {'user':user, 'birth_date':birth_date, 'purchased_items':purchased_items}
+        categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+        context = {'categories':categories, 'user':user, 'birth_date':birth_date, 'purchased_items':purchased_items}
         return render(request, 'users/profile.html', context)
     return redirect('users:login')
 

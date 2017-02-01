@@ -31,7 +31,8 @@ def index(request):
         deal.save()
     imageurl = str(deal.item.image)
     deal.item.image = imageurl.replace("apps/items","",1)
-    context = {'deal':deal}
+    categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+    context = {'categories':categories,'deal':deal}
     return render(request, 'items/index.html', context)
 
 def browse(request, category):
@@ -44,7 +45,8 @@ def browse(request, category):
         imageurl = str(item.image)
         item.image = imageurl.replace("apps/items","",1)
 
-    context = {'items':items}
+    categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+    context = {'categories':categories,'items':items}
     return render(request, 'items/browse.html', context)
 
 def create_deal(request):
@@ -86,7 +88,8 @@ def cart(request):
                 else:
                     messages.error(request, 'Card rejected')
                 return redirect('items:cart')
-        return render(request, 'items/cart.html', {'cart_items': cart_items, 'form': form, 'sum_total':sum_total})
+            categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+        return render(request, 'items/cart.html', {'cart_items': cart_items, 'form': form, 'sum_total':sum_total, 'categories':categories})
     return redirect('users:index')
 
 def remove_cart(request, id):
@@ -121,7 +124,8 @@ def item(request, id):
         r = Ratings.objects.get(user_id=request.session['id'],item_id=id)
     except:
         r = 0
-    context = {'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': r, 'chart_max':chart_max, 'chart_data':chart_data}
+    categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+    context = {'categories':categories, 'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': r, 'chart_max':chart_max, 'chart_data':chart_data}
     return render(request, 'items/item.html', context)
 
 def add_cart(request, id):

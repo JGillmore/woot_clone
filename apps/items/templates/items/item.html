@@ -3,10 +3,6 @@
 {% block title %}Item{% endblock %}
 
 {% block content %}
-	<div class="row">
-		<a href="/" style="display: inline-block;"><h5>Home</h5></a>
-		<a href="/browse/{{item.category}}" style="display: inline-block;"><h5>##Category##</h5></a>
-	</div>
 	<div class="row align center" style="margin-bottom: 70px;">
 		{% for m in messages %}
 		<h1>{{m}}</h1>
