@@ -115,3 +115,7 @@ class Ratings(models.Model):
 	user = models.ForeignKey(Users, related_name='user_rating')
 	item = models.ForeignKey(Items, related_name='item_rating')
 	objects = RatingsManger()
+
+class DealofTheMinute(models.Model):
+	updated_at = models.DateTimeField(auto_now=True)
+	item = models.ForeignKey(Items)
