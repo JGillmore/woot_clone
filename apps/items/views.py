@@ -106,7 +106,7 @@ def item(request, id):
     chart_data =''
     hour = 0
     while hour<24:
-        h = Purchases.objects.filter(item_id=id).filter(status='closed').filter(created_at__hour=hour).count()
+        h = Purchases.objects.filter(item_id=id).filter(status='closed').filter(updated_at__hour=hour).count()
         if hour == 23:
             chart_data += str(h)
         else:
