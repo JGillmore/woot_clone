@@ -68,12 +68,22 @@ def create_deal(request):
         categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
         context = {'categories':categories}
         return render(request, 'items/create_deal.html', context)
-    return redirect('items:index')
+    return redirect('items:home')
+
+def add_item(request):
+    if request.method == 'POST':
+        Items.objects.add(request.POST['name'], request.POST['description'], request.POST['price'], request.POST['units'], request.POST['category'], request.FILES['image'])
+    return redirect(reverse('items:create_deal'))
+
+    #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION
+    # item = Items.objects.get(id=2)
+    # imageurl = str(item.image)
+    # item.image = imageurl.replace("apps/items","",1)
+    # context = {'item':item, 'imageurl':imageurl}
 
 def cart(request):
     if 'id' in request.session:
         user = Users.objects.get(id=request.session['id'])
-
         cart_items = Purchases.objects.filter(status='open').filter(user=user).prefetch_related('item')
         sum_total = 0.00
         rating = "1"
@@ -82,7 +92,7 @@ def cart(request):
             sum_total = sum_total + float(item.item.price)
             imageurl = str(item.item.image)
             item.image = imageurl.replace("apps/items","",1)
-        print sum_total
+
         form = CreditCardForm()
 
         if request.method == 'POST':
@@ -200,4 +210,3 @@ def add_item(request):
     # item.image = imageurl.replace("apps/items","",1)
     # context = {'item':item, 'imageurl':imageurl}
 
-#pip install django-chart-tools
