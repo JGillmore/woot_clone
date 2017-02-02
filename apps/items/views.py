@@ -14,24 +14,18 @@ from ..users.models import Users
 from .models import Items, Purchases, Discussions
 import datetime
 import json
-from sys import platform
 
 
 def send_email(user, cart):
     template = get_template('contact_template.txt')
     content = template.render({'first_name': user.first_name, 'purchases': cart})
-    # That email you see below, is suppoed to be the customer's email
     email = EmailMessage("Your order",	content, "Woot", [user.email], headers = {'Reply-To': 'wootclone.dojo@gmail.com'})
     email.send()
 
 def home(request):
-    if platform == 'win32':
-        time = -21570
-    else:
-        time = 30
     deal = DealofTheMinute.objects.get(id=1)
-    time_diff = datetime.datetime.now().replace(tzinfo=None) - deal.updated_at.replace(tzinfo=None)
-    if int(time_diff.total_seconds()) > time:
+    time_diff = datetime.datetime.utcnow().replace(tzinfo=None) - deal.updated_at.replace(tzinfo=None)
+    if int(time_diff.total_seconds()) > 30:
         if deal.item_id == 18:
             deal.item_id= 3
         else:
@@ -40,8 +34,15 @@ def home(request):
     imageurl = str(deal.item.image)
     deal.item.image = imageurl.replace("apps/items","",1)
     categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-    context = {'categories':categories,'deal':deal}
-    return render(request, 'items/home.html', context)
+
+    data = [['Category', 'Items']]
+    for c in categories:
+        count = Purchases.objects.filter(status='closed').filter(item_id__category=c).count()
+        data.append([str(c),count])
+
+    context = {'categories':categories,'deal':deal, 'data':json.dumps(data)}
+    return render(request, 'items/index.html', context)
+
 
 class BrowseView(ListView):
     model = Items
@@ -94,7 +95,6 @@ def add_item(request):
 def cart(request):
     if 'id' in request.session:
         user = Users.objects.get(id=request.session['id'])
-
         cart_items = Purchases.objects.filter(status='open').filter(user=user).prefetch_related('item')
         sum_total = 0.00
         rating = "1"
@@ -103,7 +103,7 @@ def cart(request):
             sum_total = sum_total + float(item.item.price)
             imageurl = str(item.item.image)
             item.image = imageurl.replace("apps/items","",1)
-        print sum_total
+
         form = CreditCardForm()
 
         if request.method == 'POST':
@@ -169,19 +169,20 @@ def chart_data(request, id):
 def add_cart(request, id):
     try:
         quantity = int(request.POST['quantity'])
-        item = id
         status = 'open'
         user = request.session['id']
         items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
+        item = Items.objects.get(pk=id)
         items_left = item.units - items_left
+        while quantity>0:
+            Purchases.objects.create(item_id=id, user_id=user, status=status)
+            quantity = quantity-1
         if quantity > items_left:
             messages.add_message(request, messages.ERROR, 'Not enough units remaining, please select a lower quantity')
             return redirect('/item/'+id)
-        while quantity>0:
-            Purchases.objects.create(item_id=item, user_id=user, status=status)
-            quantity = quantity-1
         return redirect('/cart')
     except:
+        print '3'
         return redirect('users:index')
 
 def add_discussion(request):
@@ -209,4 +210,14 @@ def add_rating(request):
             return HttpResponse('Successful rating submission')
     else:
         return HttpResponse('Failed rating submission')
-#pip install django-chart-tools
+
+def add_item(request):
+    if request.method == 'POST':
+        Items.objects.add(request.POST['name'], request.POST['description'], request.POST['price'], request.POST['units'], request.POST['category'], request.FILES['image'])
+    return redirect(reverse('items:create_deal'))
+
+    #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION
+    # item = Items.objects.get(id=2)
+    # imageurl = str(item.image)
+    # item.image = imageurl.replace("apps/items","",1)
+    # context = {'item':item, 'imageurl':imageurl}
