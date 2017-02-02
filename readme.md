@@ -1,4 +1,4 @@
-# Woot Clone
+# Woot Clone: ![alt text](hhttp://www.webweaver.nu/clipart/img/nature/birds/cartoon-owl.png "Logo for title")
 * need project description
 
 ## Authors:
@@ -14,7 +14,7 @@
 * need to add dependencies 
 
 ## Cloning:
-''' git clone https://github.com/JGillmore/woot_clone.git '''
+``` git clone https://github.com/JGillmore/woot_clone.git ```
 
 ## Pull Request:
 *add pull request requirements
