@@ -1,6 +1,11 @@
 {% extends 'layout.html' %}
 
 {% block title %}Item{% endblock %}
+{% load staticfiles %}
+
+{% block static %}
+<script src="{% static 'items/js/stars.js' %}" charset="utf-8"></script>
+{% endblock %}
 
 {% block content %}
 	<div class="row align center" style="margin-bottom: 70px;">
@@ -25,33 +30,26 @@
 			</select>
 			<button class='btn btn-success' type="submit">Add to cart</button>
 		</form>
-		<h4>Item Rating: {{rating_avg.rating__avg}}</h4>
-		<p>{% if not r == 0 %}Update your rating of product{% endif %}</p>
-		<form method="POST" action="/add_rating">
-		{% csrf_token %}
-				<p style="display: inline-block;">
-  					<input name="rating" type="radio" id="rating1" value="1" {%if r.rating == 1%} checked="checked" {%endif%}/>
-  					<label for="rating1"><span class="glyphicon glyphicon-star"></span></label>
-				</p>
-				<p style="display: inline-block;">
-    				<input name="rating" type="radio" id="rating2" value="2" {%if r.rating == 2%} checked="checked" {%endif%}/>
-    				<label for="rating2"><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span></label>
-  			</p>
-  			<p style="display: inline-block;">
-    				<input name="rating" type="radio" id="rating3"  value="3" {%if r.rating == 3%} checked="checked" {%endif%} />
-    				<label for="rating3"><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span></label>
-  			</p>
-  			<p style="display: inline-block;">
-    				<input name="rating" type="radio" id="rating4" value="4" {%if r.rating == 4%} checked="checked" {%endif%} />
-    				<label for="rating4"><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span></label>
- 				</p>
- 				<p style="display: inline-block;">
-    				<input name="rating" type="radio" id="rating5"  value="5" {%if r.rating == 5%} checked="checked" {%endif%} />
-    				<label for="rating5"><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span></label>
- 				</p>
- 				<input type="hidden" name="hidden" value="{{item.id}}">
-				<button class='btn btn-default' type="submit">Submit rating</button>
-			</form>
+		<h4>Average Rating: {{rating_avg.rating__avg}}</h4>
+
+		{% if not r %}
+		<div class="starsDiv">
+			<span id='hidden'>{{ item.id }}</span>
+			<span id='1' class="glyphicon glyphicon-star-empty"></span>
+			<span id='2' class="glyphicon glyphicon-star-empty"></span>
+			<span id='3' class="glyphicon glyphicon-star-empty"></span>
+			<span id='4' class="glyphicon glyphicon-star-empty"></span>
+			<span id='5' class="glyphicon glyphicon-star-empty"></span>
+			<small>  (Click star to submit rating)</small>
+		</div>
+		{% endif %}
+
+		<!-- <form id='' method="POST" action="/add_rating"> -->
+		<!-- {% csrf_token %} -->
+			<!-- <input name="rating" type="hidden" id="rating1"/> -->
+			<!-- <input type="hidden" name="hidden" value="{{item.id}}"> -->
+			<!-- <button class='btn btn-default' type="submit">Submit rating</button> -->
+		<!-- </form> -->
 		<p>{{item.description}}</p>
 		<div id="chart_div"></div>
 			<form action="/add_discussion" method="POST">

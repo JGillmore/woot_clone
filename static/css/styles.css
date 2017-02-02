@@ -51,6 +51,18 @@ footer{
 .itemInfo{
   text-align: center;
 }
+#hidden{
+  display: none;
+}
+.glyphicon{
+  font-size: 20px;
+}
+.glyphicon-star{
+  color: #998100;
+}
+.starsDiv{
+  margin-bottom: 15px;
+}
 
 /* BROWSE PAGE */
 .item{

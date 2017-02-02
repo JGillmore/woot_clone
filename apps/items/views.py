@@ -12,7 +12,9 @@ from .models import *
 from ..users.models import Users
 from django.db.models import Sum
 from .models import Items, Purchases, Discussions
+from django.http import HttpResponse
 import json
+from django.views.decorators.csrf import csrf_exempt
 
 def send_email(user, cart):
     template = get_template('contact_template.txt')
@@ -40,7 +42,7 @@ class BrowseView(ListView):
     model = Items
     template_name = 'items/browse.html'
     context_object_name = "items"
-    paginate_by = 10
+    paginate_by = 12
 
     def get_queryset(self):
         if self.kwargs['category']=='all':
@@ -125,7 +127,7 @@ def item(request, id):
         time = ['12am','1am','2am','3am','4am','5am','6am','7am','8am','9am','10am','11am','12pm','1pm','2pm','3pm','4pm','5pm','6pm','7pm','8pm','9pm','10pm','11pm']
         h = Purchases.objects.filter(item_id=id).filter(status='closed').filter(updated_at__hour=hour).count()
         chart_data.append([time[hour],h])
-        hour+=1  
+        hour+=1
     try:
         r = Ratings.objects.get(user_id=request.session['id'],item_id=id)
     except:
@@ -141,8 +143,8 @@ def chart_data(request, id):
         h = Purchases.objects.filter(item_id=id).filter(status='closed').filter(updated_at__hour=hour).count()
         chart_data.append([time[hour],h])
         hour+=1
-    chart_data = json.dumps(chart_data) 
-    return HttpResponse(chart_data)   
+    chart_data = json.dumps(chart_data)
+    return HttpResponse(chart_data)
 
 def add_cart(request, id):
     try:
@@ -167,19 +169,21 @@ def add_discussion(request):
     except:
         return redirect('users:index')
 
+@csrf_exempt
 def add_rating(request):
-    try:
-        rate = request.POST['rating']
-        item = request.POST['hidden']
-        user = request.session['id']
+    rate = request.POST['rating']
+    item = request.POST['hidden']
+    user = request.session['id']
+
+    if rate and item and user:
         try:
-            r = Ratings.objects.get(user_id=user, item_id=item)
-            Ratings.objects.filter(user_id=user).filter(item_id=item).update(rating=rate)
-        except:
             Ratings.objects.create(item_id=item, user_id=user, rating=rate)
-        return redirect('items:item', id=item)
-    except:
-        return redirect('users:index')
+        except:
+            return HttpResponse('Failed rating submission')
+        else:
+            return HttpResponse('Successful rating submission')
+    else:
+        return HttpResponse('Failed rating submission')
 
 def add_item(request):
     if request.method == 'POST':
