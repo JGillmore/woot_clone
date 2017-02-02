@@ -6,5 +6,6 @@ The following items will be sent to you tomorrow:
   - {{ purchase.item.name|safe|striptags }}
 {% endfor %}
 
+
 Sincerely,
 The Woot Team
