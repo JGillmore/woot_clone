@@ -116,7 +116,7 @@ def remove_cart(request, id):
 def item(request, id):
     item = get_object_or_404(Items, id=id)
     discussion = Discussions.objects.filter(item_id=id).order_by('-created_at')
-    items_left = Purchases.objects.filter(item_id=id).count()
+    items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
     items_left = item.units - items_left
     imageurl = str(item.image)
     item.image = imageurl.replace("apps/items","",1)
@@ -152,6 +152,11 @@ def add_cart(request, id):
         item = id
         status = 'open'
         user = request.session['id']
+        items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
+        items_left = item.units - items_left
+        if quantity > items_left:
+            messages.add_message(request, messages.ERROR, 'Not enough units remaining, please select a lower quantity')
+            return redirect('/item/'+id)
         while quantity>0:
             Purchases.objects.create(item_id=item, user_id=user, status=status)
             quantity = quantity-1
