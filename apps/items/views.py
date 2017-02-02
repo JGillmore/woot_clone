@@ -23,10 +23,10 @@ def send_email(user, cart):
     email = EmailMessage("Your order",	content, "Woot", [user.email], headers = {'Reply-To': 'wootclone.dojo@gmail.com'})
     email.send()
 
-def index(request):
+def home(request):
     deal = DealofTheMinute.objects.get(id=1)
     time_diff = datetime.datetime.now().replace(tzinfo=None) - deal.updated_at.replace(tzinfo=None)
-    if int(time_diff.total_seconds()) > -21570: #this is actually checking to see if the time is over 30 seconds old, a new update is -21600 seconds
+    if int(time_diff.total_seconds()) > 30: #this is actually checking to see if the time is over 30 seconds old, a new update is -21600 seconds
         if deal.item_id == 18:
             deal.item_id= 3
         else:
