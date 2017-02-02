@@ -9,7 +9,7 @@
     <h1 class='categoryHeader'>{{ category.capitalize }}</h1>
   {% endif %}
   {% for item in items %}
-    <div class='itemWrap col-xs-12 col-sm-6 col-md-4'>
+    <div class='itemWrap col-xs-12 col-sm-6 col-md-4 col-lg-3'>
       <a href='{% url 'items:item' id=item.id %}'>
         <div class="item panel panel-default">
           <div class="panel-heading">{{item.name}}</div>

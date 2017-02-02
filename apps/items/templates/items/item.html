@@ -22,7 +22,7 @@
 			{% load static %}
 			<img src="{{item.image}}" alt="{{item.name}}">
 		</div>
-		<h4>Price:${{item.price}}</h4>
+		<h4>Price: ${{item.price}}</h4>
 		<form method="POST" action="/add_cart/{{item.id}}">
 		{% csrf_token %}
 			<select name="quantity">
@@ -36,7 +36,7 @@
 		</form>
 		<h4>Average Rating: {{rating_avg.rating__avg|floatformat:2}}</h4>
 		{% if r %}
-			<h5>Your Rating: {{ r.rating }}</h5>
+			<small>Your Rating: {{ r.rating }}</small>
 		{% else %}
 		<div class="starsDiv">
 			<span id='hidden'>{{ item.id }}</span>
@@ -48,20 +48,27 @@
 			<small>  (Click star to submit rating)</small>
 		</div>
 		{% endif %}
-		<h5>Description: </h5><p>{{item.description}}</p>
+		<h4>Description: </h4><p>{{item.description}}</p>
 		<div id="chart_div"></div>
-			<form action="/add_discussion" method="POST">
+		<h4>Discussions</h4>
+		{% for d in discussion %}
+			<div class="discussion col-sm-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+							<strong>{{d.user.first_name}}</strong> <small>{{d.created_at}}</small>
+					</div>
+					<div class="panel-body">
+						{{d.discussion}}
+					</div><!-- /panel-body -->
+				</div><!-- /panel panel-default -->
+			</div><!-- /col-sm-5 -->
+		{% endfor %}
+		<form action="/add_discussion" method="POST">
 			{% csrf_token %}
-				<label for="discussion">Add Discussion</label>
-				<textarea class="form-control" name="discussion"></textarea>
-				<input type="hidden" name="hidden_id" value="{{item.id}}">
-				<button class='btn btn-default' type="submit">Submit</button>
-			</form>
-			{% for d in discussion %}
-				<h6>{{d.user.first_name}}</h6>
-				<h6 class="thin">{{d.created_at}}</h6>
-				<p style="padding-left: 2em;">{{d.discussion}}</p>
-			{% endfor %}
+			<textarea class="form-control" name="discussion"></textarea>
+			<input type="hidden" name="hidden_id" value="{{item.id}}">
+			<button class='btn btn-default' type="submit">Submit</button>
+		</form>
 		</div>
 	  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	  <script type="text/javascript">
