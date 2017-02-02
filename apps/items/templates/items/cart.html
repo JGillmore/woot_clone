@@ -34,9 +34,6 @@
    			</tbody>
 		</table>
 	</div>
-	{% for message in messages %}
-		<p class='{{ message.tags }}'>{{message}}</p>
-	{% endfor %}
 	<form method="post">
 		{% csrf_token %}
 		{% for field in form %}
@@ -59,5 +56,8 @@
 </div>
 {% else %}
 <p>There are no items in your cart at this moment.</p>
+{% for message in messages %}
+	<p class='{{ message.tags }}'>{{message}}</p>
+{% endfor %}
 {% endif %}
 {% endblock %}

@@ -1,20 +1,20 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db.models import Avg, Sum
 from django.contrib import messages
-from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
 from django.views.generic import ListView
 from django.core.mail import EmailMessage, send_mail
-import datetime
+from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Sum
+from django.http import HttpResponse
 from forms import CreditCardForm
 from .models import *
 from ..users.models import Users
-from django.db.models import Sum
 from .models import Items, Purchases, Discussions
-from django.http import HttpResponse
+import datetime
 import json
-from django.views.decorators.csrf import csrf_exempt
+
 
 def send_email(user, cart):
     template = get_template('contact_template.txt')
