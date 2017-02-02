@@ -25,7 +25,7 @@ def send_email(user, cart):
     email.send()
 
 def home(request):
-    if platform = 'win32':
+    if platform == 'win32':
         time = -21570
     else:
         time = 30
