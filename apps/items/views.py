@@ -14,6 +14,7 @@ from ..users.models import Users
 from .models import Items, Purchases, Discussions
 import datetime
 import json
+from sys import platform
 
 
 def send_email(user, cart):
@@ -24,9 +25,13 @@ def send_email(user, cart):
     email.send()
 
 def home(request):
+    if platform == 'win32':
+        time = -21570
+    else:
+        time = 30
     deal = DealofTheMinute.objects.get(id=1)
     time_diff = datetime.datetime.now().replace(tzinfo=None) - deal.updated_at.replace(tzinfo=None)
-    if int(time_diff.total_seconds()) > 30: #this is actually checking to see if the time is over 30 seconds old, a new update is -21600 seconds
+    if int(time_diff.total_seconds()) > time:
         if deal.item_id == 18:
             deal.item_id= 3
         else:
