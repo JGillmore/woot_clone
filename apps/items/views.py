@@ -14,6 +14,7 @@ from ..users.models import Users
 from .models import Items, Purchases, Discussions
 import datetime
 import json
+from sys import platform
 
 
 def send_email(user, cart):
@@ -24,9 +25,13 @@ def send_email(user, cart):
     email.send()
 
 def home(request):
+    if platform == 'win32':
+        time = -21570
+    else:
+        time = 30
     deal = DealofTheMinute.objects.get(id=1)
     time_diff = datetime.datetime.now().replace(tzinfo=None) - deal.updated_at.replace(tzinfo=None)
-    if int(time_diff.total_seconds()) > 30: #this is actually checking to see if the time is over 30 seconds old, a new update is -21600 seconds
+    if int(time_diff.total_seconds()) > time:
         if deal.item_id == 18:
             deal.item_id= 3
         else:
@@ -69,7 +74,18 @@ def create_deal(request):
         categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
         context = {'categories':categories}
         return render(request, 'items/create_deal.html', context)
-    return redirect('items:index')
+    return redirect('items:home')
+
+def add_item(request):
+    if request.method == 'POST':
+        Items.objects.add(request.POST['name'], request.POST['description'], request.POST['price'], request.POST['units'], request.POST['category'], request.FILES['image'])
+    return redirect(reverse('items:create_deal'))
+
+    #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION
+    # item = Items.objects.get(id=2)
+    # imageurl = str(item.image)
+    # item.image = imageurl.replace("apps/items","",1)
+    # context = {'item':item, 'imageurl':imageurl}
 
 def cart(request):
     if 'id' in request.session:
