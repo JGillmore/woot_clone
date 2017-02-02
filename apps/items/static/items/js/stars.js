@@ -11,6 +11,7 @@ $(document).ready(function(){
     $(this).attr('class', 'glyphicon glyphicon-star');
     $(this).prevAll().attr('class', 'glyphicon glyphicon-star');
     $('.glyphicon').unbind('mouseenter mouseleave');
+    $('.glyphicon').hide();
     var rating = $(this).attr('id');
     var item_id = $(this).siblings('#hidden').text();
     $.ajax({

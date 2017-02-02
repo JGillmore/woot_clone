@@ -5,6 +5,9 @@
 {% block content %}
 <h1>Edit Information</h1>
 <hr>
+{% for message in messages %}
+  <p class='{{ message.tags }}'>{{ message }}</p>
+{% endfor %}
 <form action='{% url "users:update_info" %}' method='post'>
   {% csrf_token %}
   <div class="col-10 form-group">

@@ -35,8 +35,9 @@
 			<button class='btn btn-success' type="submit">Add to cart</button>
 		</form>
 		<h4>Average Rating: {{rating_avg.rating__avg|floatformat:2}}</h4>
-
-		{% if not r %}
+		{% if r %}
+			<h5>Your Rating: {{ r.rating }}</h5>
+		{% else %}
 		<div class="starsDiv">
 			<span id='hidden'>{{ item.id }}</span>
 			<span id='1' class="glyphicon glyphicon-star-empty"></span>
@@ -47,7 +48,7 @@
 			<small>  (Click star to submit rating)</small>
 		</div>
 		{% endif %}
-		<p>{{item.description}}</p>
+		<h5>Description: </h5><p>{{item.description}}</p>
 		<div id="chart_div"></div>
 			<form action="/add_discussion" method="POST">
 			{% csrf_token %}

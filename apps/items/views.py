@@ -8,7 +8,7 @@ from django.core.mail import EmailMessage, send_mail
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum
 from django.http import HttpResponse
-from forms import CreditCardForm
+from forms import CreditCardForm, NewItemForm
 from .models import *
 from ..users.models import Users
 from .models import Items, Purchases, Discussions
@@ -34,13 +34,15 @@ def home(request):
     imageurl = str(deal.item.image)
     deal.item.image = imageurl.replace("apps/items","",1)
     categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+
     data = [['Category', 'Items']]
     for c in categories:
         count = Purchases.objects.filter(status='closed').filter(item_id__category=c).count()
         data.append([str(c),count])
-    print data
+
     context = {'categories':categories,'deal':deal, 'data':json.dumps(data)}
-    return render(request, 'items/index.html', context)
+    return render(request, 'items/home.html', context)
+
 
 class BrowseView(ListView):
     model = Items
@@ -70,15 +72,19 @@ class BrowseView(ListView):
 def create_deal(request):
     user = Users.objects.get(id=request.session['id'])
     if user.admin:
-        categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-        context = {'categories':categories}
-        return render(request, 'items/create_deal.html', context)
+        form = NewItemForm()
+        return render(request, 'items/create_deal.html', {'form': form})
     return redirect('items:home')
 
 def add_item(request):
     if request.method == 'POST':
-        Items.objects.add(request.POST['name'], request.POST['description'], request.POST['price'], request.POST['units'], request.POST['category'], request.FILES['image'])
-    return redirect(reverse('items:create_deal'))
+        print request.POST
+        form = NewItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Item added')
+            return redirect('users:profile')
+    return render(request, 'items/create_deal.html', {'form': form})
 
     #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION
     # item = Items.objects.get(id=2)
@@ -142,11 +148,16 @@ def item(request, id):
         h = Purchases.objects.filter(item_id=id).filter(status='closed').filter(updated_at__hour=hour).count()
         chart_data.append([time[hour],h])
         hour+=1
-    try:
-        r = Ratings.objects.get(user_id=request.session['id'],item_id=id)
-    except:
-        r = 0
-    context = {'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': r, 'chart_data':json.dumps(chart_data)}
+
+    item_rating_by_user = Ratings.objects.filter(user_id=request.session['id']).filter(item_id=id)
+
+    if not item_rating_by_user:
+        item_rating_by_user = ''
+    else:
+        item_rating_by_user = item_rating_by_user[0]
+
+    categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+    context = {'categories':categories, 'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': item_rating_by_user, 'chart_data':json.dumps(chart_data)}
     return render(request, 'items/item.html', context)
 
 def chart_data(request, id):
@@ -215,4 +226,3 @@ def add_item(request):
     # imageurl = str(item.image)
     # item.image = imageurl.replace("apps/items","",1)
     # context = {'item':item, 'imageurl':imageurl}
-
