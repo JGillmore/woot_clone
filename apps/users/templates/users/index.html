@@ -8,6 +8,7 @@
     {% endif %}
   {% endfor %}
   <form action='{% url "users:register" %}' method='post'>
+    {% csrf_token %}
     <div class="col-10 form-group">
       <label>Email</label>
       <input class='form-control' type='text' name='email' value='{{user.email}}'>
