@@ -78,7 +78,6 @@ def create_deal(request):
 
 def add_item(request):
     if request.method == 'POST':
-        print request.POST
         form = NewItemForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
@@ -171,6 +170,7 @@ def chart_data(request, id):
     chart_data = json.dumps(chart_data)
     return HttpResponse(chart_data)
 
+@csrf_exempt
 def add_cart(request, id):
     try:
         quantity = int(request.POST['quantity'])
@@ -187,7 +187,6 @@ def add_cart(request, id):
             return redirect('/item/'+id)
         return redirect('/cart')
     except:
-        print '3'
         return redirect('users:index')
 
 def add_discussion(request):
