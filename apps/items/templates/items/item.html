@@ -49,7 +49,7 @@
 		<h4>Average Rating: {{rating_avg.rating__avg|floatformat:2}}</h4>
 		{% if r %}
 			<small>Your Rating: {{ r.rating }}</small>
-		{% else %}
+		{% elif 'id' in request.session %}
 		<div class="starsDiv">
 			<span id='hidden'>{{ item.id }}</span>
 			<span id='1' class="glyphicon glyphicon-star-empty"></span>
@@ -59,6 +59,8 @@
 			<span id='5' class="glyphicon glyphicon-star-empty"></span>
 			<small>  (Click star to submit rating)</small>
 		</div>
+		{% else %}
+			<small>Please <a href="{% url 'users:login' %}">login</a> to submit rating</small>
 		{% endif %}
 		<h4>Description: </h4><p>{{item.description}}</p>
 		<div id="chart_div"></div>

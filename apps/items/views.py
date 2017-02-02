@@ -132,6 +132,7 @@ def remove_cart(request, id):
         delete.delete()
         return redirect('items:cart')
     return redirect('users:index')
+
 def remove_cart_all(request):
     if 'id' in request.session:
         delete = Purchases.objects.filter(status='open').filter(user_id=request.session['id'])
@@ -149,15 +150,16 @@ def item(request, id):
     rating_avg = Ratings.objects.filter(item_id=item).aggregate(Avg('rating'))
     chart_data =[['Hour', 'Items Sold']]
     hour = 0
+
     while hour<24:
         time = ['12am','1am','2am','3am','4am','5am','6am','7am','8am','9am','10am','11am','12pm','1pm','2pm','3pm','4pm','5pm','6pm','7pm','8pm','9pm','10pm','11pm']
         h = Purchases.objects.filter(item_id=id).filter(status='closed').filter(updated_at__hour=hour).count()
         chart_data.append([time[hour],h])
         hour+=1
 
-    item_rating_by_user = Ratings.objects.filter(user_id=request.session['id']).filter(item_id=id)
-
-    if not item_rating_by_user:
+    try:
+        item_rating_by_user = Ratings.objects.filter(user_id=request.session['id']).filter(item_id=id)
+    except:
         item_rating_by_user = ''
     else:
         item_rating_by_user = item_rating_by_user[0]
@@ -177,7 +179,6 @@ def chart_data(request, id):
     chart_data = json.dumps(chart_data)
     return HttpResponse(chart_data)
 
-@csrf_exempt
 def add_cart(request, id):
     try:
         quantity = int(request.POST['quantity'])
@@ -206,7 +207,6 @@ def add_discussion(request):
     except:
         return redirect('users:index')
 
-@csrf_exempt
 def add_rating(request):
     rate = request.POST['rating']
     item = request.POST['hidden']
