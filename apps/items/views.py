@@ -186,12 +186,12 @@ def add_cart(request, id):
         items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
         item = Items.objects.get(pk=id)
         items_left = item.units - items_left
-        while quantity>0:
-            Purchases.objects.create(item_id=id, user_id=user, status=status)
-            quantity = quantity-1
         if quantity > items_left:
             messages.add_message(request, messages.ERROR, 'Not enough units remaining, please select a lower quantity')
             return redirect('/item/'+id)
+        while quantity>0:
+            Purchases.objects.create(item_id=id, user_id=user, status=status)
+            quantity = quantity-1
         return redirect('/cart')
     except:
         return redirect('users:index')
