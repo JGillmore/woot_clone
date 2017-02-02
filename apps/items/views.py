@@ -148,12 +148,16 @@ def item(request, id):
         h = Purchases.objects.filter(item_id=id).filter(status='closed').filter(updated_at__hour=hour).count()
         chart_data.append([time[hour],h])
         hour+=1
-    try:
-        r = Ratings.objects.get(user_id=request.session['id'],item_id=id)
-    except:
-        r = 0
+
+    item_rating_by_user = Ratings.objects.filter(user_id=request.session['id']).filter(item_id=id)
+
+    if not item_rating_by_user:
+        item_rating_by_user = ''
+    else:
+        item_rating_by_user = item_rating_by_user[0]
+
     categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-    context = {'categories':categories, 'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': r, 'chart_data':json.dumps(chart_data)}
+    context = {'categories':categories, 'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': item_rating_by_user, 'chart_data':json.dumps(chart_data)}
     return render(request, 'items/item.html', context)
 
 def chart_data(request, id):
