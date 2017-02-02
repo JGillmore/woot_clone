@@ -71,10 +71,18 @@ class BrowseView(ListView):
 
 def create_deal(request):
     user = Users.objects.get(id=request.session['id'])
+    users = Users.objects.filter(admin=0)
     if user.admin:
         form = NewItemForm()
         categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-        return render(request, 'items/create_deal.html', {'categories':categories, 'form': form})
+        return render(request, 'items/create_deal.html', {'categories':categories, 'form': form, 'users':users})
+    return redirect('items:home')
+
+def promote(request, id):
+    user = Users.objects.get(id=request.session['id'])
+    if user.admin:
+        u = Users.objects.filter(id=id).update(admin=1)
+        return redirect('/create')
     return redirect('items:home')
 
 def add_item(request):
@@ -85,12 +93,6 @@ def add_item(request):
             messages.success(request, 'Item added')
             return redirect('users:profile')
     return render(request, 'items/create_deal.html', {'form': form})
-
-    #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION
-    # item = Items.objects.get(id=2)
-    # imageurl = str(item.image)
-    # item.image = imageurl.replace("apps/items","",1)
-    # context = {'item':item, 'imageurl':imageurl}
 
 def cart(request):
     if 'id' in request.session:
