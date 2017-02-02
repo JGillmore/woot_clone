@@ -63,6 +63,10 @@ footer{
 .starsDiv{
   margin-bottom: 15px;
 }
+.discussion{
+  padding-left: 0px !important;
+  margin-bottom: 10px;
+}
 
 /* BROWSE PAGE */
 .item{
