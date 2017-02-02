@@ -94,12 +94,6 @@ def add_item(request):
             return redirect('users:profile')
     return render(request, 'items/create_deal.html', {'form': form})
 
-    #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION
-    # item = Items.objects.get(id=2)
-    # imageurl = str(item.image)
-    # item.image = imageurl.replace("apps/items","",1)
-    # context = {'item':item, 'imageurl':imageurl}
-
 def cart(request):
     if 'id' in request.session:
         user = Users.objects.get(id=request.session['id'])
