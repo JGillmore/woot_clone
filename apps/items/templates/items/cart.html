@@ -12,7 +12,6 @@
      			<th class='headerImage'></th>
      			<th align="middle">Item</th>
      			<th align="middle">Price</th>
-          <th align="middle">Quanity</th>
      			<th align="middle">Remove</th>
   			</tr>
  			</thead>
@@ -23,7 +22,6 @@
      			<td class='cellPic'><a href="/item/{{i.item.id}}"><img class='img-thumbnail tablePics'src="{{i.image}}" alt="{{i.name}}" align="middle"></a></td>
      			<td><a href="item/{{i.item.id}}">{{i.item.name}}</a></td>
      			<td>${{i.item.price}}</td>
-              <td>2</td>
      			<td class='trash'><a href="remove_cart/{{i.id}}"><span class="glyphicon glyphicon-trash" style="color: red; font-size: 2em;"></span></a></td>
   			</tr>
   		{% endfor %}
