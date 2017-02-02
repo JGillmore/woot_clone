@@ -69,7 +69,18 @@ def create_deal(request):
         categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
         context = {'categories':categories}
         return render(request, 'items/create_deal.html', context)
-    return redirect('items:index')
+    return redirect('items:home')
+
+def add_item(request):
+    if request.method == 'POST':
+        Items.objects.add(request.POST['name'], request.POST['description'], request.POST['price'], request.POST['units'], request.POST['category'], request.FILES['image'])
+    return redirect(reverse('items:create_deal'))
+
+    #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION
+    # item = Items.objects.get(id=2)
+    # imageurl = str(item.image)
+    # item.image = imageurl.replace("apps/items","",1)
+    # context = {'item':item, 'imageurl':imageurl}
 
 def cart(request):
     if 'id' in request.session:
@@ -189,16 +200,4 @@ def add_rating(request):
             return HttpResponse('Successful rating submission')
     else:
         return HttpResponse('Failed rating submission')
-
-def add_item(request):
-    if request.method == 'POST':
-        Items.objects.add(request.POST['name'], request.POST['description'], request.POST['price'], request.POST['units'], request.POST['category'], request.FILES['image'])
-    return redirect(reverse('items:create_deal'))
-
-    #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION
-    # item = Items.objects.get(id=2)
-    # imageurl = str(item.image)
-    # item.image = imageurl.replace("apps/items","",1)
-    # context = {'item':item, 'imageurl':imageurl}
-
 #pip install django-chart-tools

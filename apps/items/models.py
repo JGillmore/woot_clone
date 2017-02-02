@@ -23,12 +23,12 @@ class ItemsManager(models.Manager):
 		pass
 
 class Items(models.Model):
-	name = models.CharField(max_length=200)
-	description = models.TextField()
-	price = models.DecimalField(max_digits=9, decimal_places=2)
-	units = models.PositiveSmallIntegerField()
-	category = models.CharField(max_length=200)
-	image = models.ImageField(upload_to='apps/items/static/images/dbitems/')
+	name = models.CharField(blank=False, max_length=200)
+	description = models.TextField(blank=False,)
+	price = models.DecimalField(blank=False, max_digits=9, decimal_places=2)
+	units = models.PositiveSmallIntegerField(blank=False)
+	category = models.CharField(blank=False, max_length=200)
+	image = models.ImageField(blank=False, upload_to='apps/items/static/images/dbitems/')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	objects = ItemsManager()

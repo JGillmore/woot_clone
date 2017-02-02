@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from datetime import date, datetime
 from calendar import monthrange
 
-from ..items.models import Purchases
+from ..items.models import Purchases, Items
 
 class CreditCardField(forms.CharField):
     def clean(self, value):
@@ -79,3 +79,6 @@ class CreditCardForm(forms.Form):
         self.fields['number'].widget.attrs.update({'class': 'form-control'})
         self.fields['expiration'].widget.attrs.update({'class': 'form-control'})
         self.fields['cvc'].widget.attrs.update({'class': 'form-control'})
+
+class NewItemForm(forms.Form):
+    model = Items
