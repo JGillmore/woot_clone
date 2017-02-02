@@ -11,10 +11,14 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a href="{% url 'items:browse' category='all' %}">Browse | All</a></li>
-          {% for category in categories %}
+        <li><a class='dropdown-toggle' data-toggle="dropdown" href="#">Browse<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="{% url 'items:browse' category='all'%}">All</a></li>
+            {% for category in categories %}
             <li><a href="{% url 'items:browse' category=category%}">{{category}}</a></li>
-          {% endfor %}
+            {% endfor %}
+          </ul>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if 'id' in request.session %}

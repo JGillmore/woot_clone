@@ -35,7 +35,9 @@
 			<button class='btn btn-success' type="submit">Add to cart</button>
 		</form>
 		<h4>Average Rating: {{rating_avg.rating__avg|floatformat:2}}</h4>
-
+		{% if r%}
+			<h4>Your Rating: {{r.rating}}</h4>
+		{% endif %}
 		{% if not r %}
 		<div class="starsDiv">
 			<span id='hidden'>{{ item.id }}</span>

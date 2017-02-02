@@ -141,7 +141,8 @@ def item(request, id):
         r = Ratings.objects.get(user_id=request.session['id'],item_id=id)
     except:
         r = 0
-    context = {'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': r, 'chart_data':json.dumps(chart_data)}
+    categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+    context = {'categories':categories, 'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': r, 'chart_data':json.dumps(chart_data)}
     return render(request, 'items/item.html', context)
 
 def chart_data(request, id):
@@ -209,4 +210,3 @@ def add_item(request):
     # imageurl = str(item.image)
     # item.image = imageurl.replace("apps/items","",1)
     # context = {'item':item, 'imageurl':imageurl}
-

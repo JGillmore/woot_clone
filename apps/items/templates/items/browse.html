@@ -3,7 +3,11 @@
 {% block title %}Browse{% endblock %}
 
 {% block content %}
-  <h1 class='categoryHeader'>{{ category.capitalize }}</h1>
+  {% if category == 'all' %}
+    <h1 class='categoryHeader'>{{ category.capitalize }} Items</h1>
+  {% else %}
+    <h1 class='categoryHeader'>{{ category.capitalize }}</h1>
+  {% endif %}
   {% for item in items %}
     <div class='itemWrap col-xs-12 col-sm-6 col-md-4'>
       <a href='{% url 'items:item' id=item.id %}'>

@@ -33,6 +33,9 @@ class UserManager(models.Manager):
         if isValid:
             try:
                 temp=Users.objects.create(first_name=first_name, last_name=last_name, email=email, password=pwhash, birth_date=birth_date, admin=False)
+                if temp.id == 1:
+                    temp.admin=True
+                    temp.save()
                 return temp
             except:
                 messages.add_message(request, messages.INFO,"Account already exists, please log in instead")
