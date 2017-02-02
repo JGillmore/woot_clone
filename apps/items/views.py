@@ -41,7 +41,7 @@ def home(request):
         data.append([str(c),count])
 
     context = {'categories':categories,'deal':deal, 'data':json.dumps(data)}
-    return render(request, 'items/index.html', context)
+    return render(request, 'items/home.html', context)
 
 
 class BrowseView(ListView):
