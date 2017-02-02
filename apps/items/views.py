@@ -71,9 +71,17 @@ class BrowseView(ListView):
 
 def create_deal(request):
     user = Users.objects.get(id=request.session['id'])
+    users = Users.objects.filter(admin=0)
     if user.admin:
         form = NewItemForm()
-        return render(request, 'items/create_deal.html', {'form': form})
+        return render(request, 'items/create_deal.html', {'form': form, 'users':users})
+    return redirect('items:home')
+
+def promote(request, id):
+    user = Users.objects.get(id=request.session['id'])
+    if user.admin:
+        u = Users.objects.filter(id=id).update(admin=1)
+        return redirect('/create')
     return redirect('items:home')
 
 def add_item(request):

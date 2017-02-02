@@ -15,5 +15,6 @@ urlpatterns = [
 	url(r'^add_cart/(?P<id>\d+$)', add_cart),
 	url(r'^remove_cart/(?P<id>\d+$)', remove_cart),
 	url(r'^chart_data/(?P<id>\d+$)', chart_data),
-	url(r'^remove_cart/all$', remove_cart_all)
+	url(r'^remove_cart/all$', remove_cart_all),
+	url(r'^promote/(?P<id>\d+$)', promote),
 ]

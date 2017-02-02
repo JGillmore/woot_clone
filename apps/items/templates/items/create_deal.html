@@ -29,5 +29,23 @@
   <div class="submit">
     <button class='btn btn-success' type="submit">Submit</button>
   </div>
+  <div class="row">
+    <table class = "table table-striped">
+      <thead>
+        <tr>
+          <th>User Email</th>
+          <th>Promote to Admin</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for u in users %}
+        <tr>
+          <td>{{u.email}}</td>
+          <td><a href="promote/{{u.id}}"><span class="glyphicon glyphicon-ok"></span></a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </form>
 {% endblock %}
