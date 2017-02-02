@@ -2,6 +2,9 @@
 
 {% block title %}Browse{% endblock %}
 
+{% load staticfiles %}
+{% block static %}<script src="{% static 'items/js/cartButton.js' %}" charset="utf-8"></script>{% endblock %}
+
 {% block content %}
   {% if category == 'all' %}
     <h1 class='categoryHeader'>{{ category.capitalize }} Items</h1>
@@ -19,16 +22,36 @@
           </div>
         </div>
       </a>
+      <span class='item_id'>{{ item.id }}</span>
+      <button class='cartButton btn btn-success' type="button">+</button>
+      <span class='added'></span>
     </div>
   {% endfor %}
   {% if is_paginated %}
-      <div class="pagination">
-        <div class="page-links">
-          {% for page in page_obj.paginator.page_range %}
-            {% if forloop.counter != 1 %} | {% endif %}
-            <a href="{% url 'items:browse' category=category %}?page={{ page }}">{{ page }}</a>
-          {% endfor %}
-        </div>
+    <div class="pagination">
+      <div class="page-links">
+        {% for page in page_obj.paginator.page_range %}
+          {% if forloop.counter != 1 %} | {% endif %}
+          <a href="{% url 'items:browse' category=category %}?page={{ page }}">{{ page }}</a>
+        {% endfor %}
       </div>
-    {% endif %}
+    </div>
+  {% endif %}
+  <script type="text/javascript">
+    $('.cartButton').click(function(){
+      var item_id = $(this).siblings('span').text()
+      $.ajax({
+        url: '/add_cart/' + item_id,
+        type: 'POST',
+        data: {'quantity': 1},
+        context: this,
+        success: function(data){
+          $(this).siblings('.added').text('+1').fadeIn('slow');
+          setTimeout(function(){
+            $('.added').fadeOut();
+          }, 1000);
+        }
+      })
+    })
+  </script>
 {% endblock %}

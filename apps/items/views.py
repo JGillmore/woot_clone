@@ -79,7 +79,6 @@ def create_deal(request):
 
 def add_item(request):
     if request.method == 'POST':
-        print request.POST
         form = NewItemForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
@@ -133,6 +132,12 @@ def remove_cart(request, id):
         delete.delete()
         return redirect('items:cart')
     return redirect('users:index')
+def remove_cart_all(request):
+    if 'id' in request.session:
+        delete = Purchases.objects.filter(status='open').filter(user_id=request.session['id'])
+        delete.delete()
+        return redirect('items:cart')
+    return redirect('users:index')
 
 def item(request, id):
     item = get_object_or_404(Items, id=id)
@@ -172,6 +177,7 @@ def chart_data(request, id):
     chart_data = json.dumps(chart_data)
     return HttpResponse(chart_data)
 
+@csrf_exempt
 def add_cart(request, id):
     try:
         quantity = int(request.POST['quantity'])
@@ -188,7 +194,6 @@ def add_cart(request, id):
             return redirect('/item/'+id)
         return redirect('/cart')
     except:
-        print '3'
         return redirect('users:index')
 
 def add_discussion(request):
