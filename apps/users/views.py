@@ -24,7 +24,7 @@ def login(request):
             request.session['today']=date.today().strftime('%b %d, %Y')
             request.session['restrictday']=str(date.today())
             messages.success(request, 'Login successful')
-            return redirect(reverse('items:index'))
+            return redirect(reverse('items:home'))
     return redirect('users:index')
 
 def register(request):
