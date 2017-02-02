@@ -46,7 +46,7 @@ class BrowseView(ListView):
 
     def get_queryset(self):
         if self.kwargs['category']=='all':
-            queryset = Items.objects.all().order_by('category').order_by('name')
+            queryset = Items.objects.all().order_by('category', 'name')
         else:
             queryset = Items.objects.all().filter(category=self.kwargs['category']).order_by('name')
 
