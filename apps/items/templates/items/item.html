@@ -34,7 +34,7 @@
 			</select>
 			<button class='btn btn-success' type="submit">Add to cart</button>
 		</form>
-		<h4>Average Rating: {{rating_avg.rating__avg}}</h4>
+		<h4>Average Rating: {{rating_avg.rating__avg|floatformat:2}}</h4>
 
 		{% if not r %}
 		<div class="starsDiv">

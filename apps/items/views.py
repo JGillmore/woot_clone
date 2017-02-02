@@ -74,7 +74,6 @@ def create_deal(request):
 def cart(request):
     if 'id' in request.session:
         user = Users.objects.get(id=request.session['id'])
-
         cart_items = Purchases.objects.filter(status='open').filter(user=user).prefetch_related('item')
         sum_total = 0.00
         rating = "1"
@@ -83,7 +82,7 @@ def cart(request):
             sum_total = sum_total + float(item.item.price)
             imageurl = str(item.item.image)
             item.image = imageurl.replace("apps/items","",1)
-        print sum_total
+
         form = CreditCardForm()
 
         if request.method == 'POST':
@@ -201,4 +200,3 @@ def add_item(request):
     # item.image = imageurl.replace("apps/items","",1)
     # context = {'item':item, 'imageurl':imageurl}
 
-#pip install django-chart-tools
