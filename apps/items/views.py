@@ -8,7 +8,7 @@ from django.core.mail import EmailMessage, send_mail
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum
 from django.http import HttpResponse
-from forms import CreditCardForm
+from forms import CreditCardForm, NewItemForm
 from .models import *
 from ..users.models import Users
 from .models import Items, Purchases, Discussions
@@ -34,8 +34,15 @@ def home(request):
     imageurl = str(deal.item.image)
     deal.item.image = imageurl.replace("apps/items","",1)
     categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-    context = {'categories':categories,'deal':deal}
-    return render(request, 'items/index.html', context)
+
+    data = [['Category', 'Items']]
+    for c in categories:
+        count = Purchases.objects.filter(status='closed').filter(item_id__category=c).count()
+        data.append([str(c),count])
+
+    context = {'categories':categories,'deal':deal, 'data':json.dumps(data)}
+    return render(request, 'items/home.html', context)
+
 
 class BrowseView(ListView):
     model = Items
@@ -65,15 +72,19 @@ class BrowseView(ListView):
 def create_deal(request):
     user = Users.objects.get(id=request.session['id'])
     if user.admin:
-        categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-        context = {'categories':categories}
-        return render(request, 'items/create_deal.html', context)
+        form = NewItemForm()
+        return render(request, 'items/create_deal.html', {'form': form})
     return redirect('items:home')
 
 def add_item(request):
     if request.method == 'POST':
-        Items.objects.add(request.POST['name'], request.POST['description'], request.POST['price'], request.POST['units'], request.POST['category'], request.FILES['image'])
-    return redirect(reverse('items:create_deal'))
+        print request.POST
+        form = NewItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Item added')
+            return redirect('users:profile')
+    return render(request, 'items/create_deal.html', {'form': form})
 
     #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION
     # item = Items.objects.get(id=2)
@@ -159,19 +170,20 @@ def chart_data(request, id):
 def add_cart(request, id):
     try:
         quantity = int(request.POST['quantity'])
-        item = id
         status = 'open'
         user = request.session['id']
         items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
+        item = Items.objects.get(pk=id)
         items_left = item.units - items_left
+        while quantity>0:
+            Purchases.objects.create(item_id=id, user_id=user, status=status)
+            quantity = quantity-1
         if quantity > items_left:
             messages.add_message(request, messages.ERROR, 'Not enough units remaining, please select a lower quantity')
             return redirect('/item/'+id)
-        while quantity>0:
-            Purchases.objects.create(item_id=item, user_id=user, status=status)
-            quantity = quantity-1
         return redirect('/cart')
     except:
+        print '3'
         return redirect('users:index')
 
 def add_discussion(request):

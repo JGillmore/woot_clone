@@ -11,27 +11,27 @@
     {% csrf_token %}
     <div class="col-10 form-group">
       <label>Email</label>
-      <input class='form-control' type='text' name='email' value='{{user.email}}'>
+      <input class='form-control' type='text' name='email' value='{{user.email}}' required>
     </div>
     <div class="col-10 form-group">
       <label>First Name</label>
-      <input class='form-control' type='text' name='first_name' value='{{user.first_name}}'>
+      <input class='form-control' type='text' name='first_name' value='{{user.first_name}}' required>
     </div>
     <div class="col-10 form-group">
       <label>Last Name</label>
-      <input class='form-control' type='text' name='last_name' value='{{user.last_name}}'>
+      <input class='form-control' type='text' name='last_name' value='{{user.last_name}}' required>
     </div>
     <div class="col-10 form-group">
       <label>Birthday</label>
-      <input class='form-control' type='date' name='birth_date' value='{{user.birth_date|date:"Y-m-d"}}' max='{{request.session.restrictday}}'>
+      <input class='form-control' type='date' name='birth_date' value='{{user.birth_date|date:"Y-m-d"}}' max='{{request.session.restrictday}}' required>
     </div>
     <div class="col-10 form-group">
       <label>Password</label>
-      <input class='form-control' type='password' name='password'>
+      <input class='form-control' type='password' name='password' required>
     </div>
     <div class="col-10 form-group">
       <label>Password Confirm</label>
-      <input class='form-control' type='password' name='confirmpassword'>
+      <input class='form-control' type='password' name='confirmpassword' required>
     </div>
     <button class='btn btn-default'type="submit" name="button">Submit</button>
   </form>
@@ -46,11 +46,11 @@
     {% csrf_token %}
     <div class="col-10 form-group">
       <label>Email</label>
-      <input class='form-control' type='text' name='email'>
+      <input class='form-control' type='text' name='email' required>
     </div>
     <div class="col-10 form-group">
       <label>Password</label>
-      <input class='form-control' type='password' name='password'>
+      <input class='form-control' type='password' name='password' required>
     </div>
     <button class='btn btn-default'type="submit" name="button">Submit</button>
   </form>

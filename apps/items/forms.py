@@ -80,5 +80,17 @@ class CreditCardForm(forms.Form):
         self.fields['expiration'].widget.attrs.update({'class': 'form-control'})
         self.fields['cvc'].widget.attrs.update({'class': 'form-control'})
 
-class NewItemForm(forms.Form):
-    model = Items
+class NewItemForm(forms.ModelForm):
+    type_choices = [(i, i) for i in Items.objects.all().order_by('category').values_list('category', flat=True).distinct()]
+    category = forms.ChoiceField(choices=type_choices)
+
+    class Meta:
+        model = Items
+        fields = ('name', 'description', 'price', 'units', 'image','category')
+
+    def __init__(self, *args, **kwargs):
+        super(NewItemForm, self).__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['description'].widget.attrs.update({'class': 'form-control'})
+        self.fields['price'].widget.attrs.update({'class': 'form-control'})
+        self.fields['units'].widget.attrs.update({'class': 'form-control'})
