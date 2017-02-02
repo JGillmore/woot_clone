@@ -43,13 +43,6 @@
 			<small>  (Click star to submit rating)</small>
 		</div>
 		{% endif %}
-
-		<!-- <form id='' method="POST" action="/add_rating"> -->
-		<!-- {% csrf_token %} -->
-			<!-- <input name="rating" type="hidden" id="rating1"/> -->
-			<!-- <input type="hidden" name="hidden" value="{{item.id}}"> -->
-			<!-- <button class='btn btn-default' type="submit">Submit rating</button> -->
-		<!-- </form> -->
 		<p>{{item.description}}</p>
 		<div id="chart_div"></div>
 			<form action="/add_discussion" method="POST">
