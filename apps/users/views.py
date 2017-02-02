@@ -41,12 +41,12 @@ def register(request):
             request.session['id']=temp.id
             request.session['today']=date.today().strftime('%b %d, %Y')
             request.session['restrictday']=str(date.today())
-            return redirect('users:profile')
+            return redirect(reverse('items:home'))
     return redirect('users:index')
 
 def logout(request):
     request.session.clear()
-    return redirect('/')
+    return redirect('users:login')
 
 def profile(request):
     if 'id' in request.session:
