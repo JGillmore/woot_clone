@@ -14,7 +14,7 @@
 * need to add dependencies 
 
 ## Cloning:
-$ git clone https://github.com/JGillmore/woot_clone.git
+''' git clone https://github.com/JGillmore/woot_clone.git '''
 
 ## Pull Request:
 *add pull request requirements

@@ -132,6 +132,12 @@ def remove_cart(request, id):
         delete.delete()
         return redirect('items:cart')
     return redirect('users:index')
+def remove_cart_all(request):
+    if 'id' in request.session:
+        delete = Purchases.objects.filter(status='open').filter(user_id=request.session['id'])
+        delete.delete()
+        return redirect('items:cart')
+    return redirect('users:index')
 
 def item(request, id):
     item = get_object_or_404(Items, id=id)

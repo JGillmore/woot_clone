@@ -127,3 +127,6 @@ label[for=id_expiration_0]{
     display: none !important;
   }
 }
+.table > tbody > tr > td {
+     vertical-align: middle;
+}
