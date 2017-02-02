@@ -10,7 +10,7 @@
 {% block content %}
 	<div class="row align center" style="margin-bottom: 70px;">
 		{% for m in messages %}
-		<h1 style="color: red;">{{m}}</h1>
+		<h1 class="{{m.tags}}">{{m}}</h1>
 		{% endfor %}
 		<div class="itemInfo">
 			<h4>{{item.name}}</h4>
