@@ -4,7 +4,7 @@ from views import *
 from .views import BrowseView
 
 urlpatterns = [
-	url(r'^$', index, name='index'),
+	url(r'^$', home, name='home'),
 	url(r'^browse/(?P<category>.+$)', BrowseView.as_view(), name='browse'),
 	url(r'^create$', create_deal, name='create_deal'),
 	url(r'^add$', add_item, name='add_item'),

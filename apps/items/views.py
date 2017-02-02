@@ -24,14 +24,14 @@ def send_email(user, cart):
     email = EmailMessage("Your order",	content, "Woot", [user.email], headers = {'Reply-To': 'wootclone.dojo@gmail.com'})
     email.send()
 
-def index(request):
+def home(request):
     if platform = 'win32':
         time = -21570
     else:
         time = 30
     deal = DealofTheMinute.objects.get(id=1)
     time_diff = datetime.datetime.now().replace(tzinfo=None) - deal.updated_at.replace(tzinfo=None)
-    if int(time_diff.total_seconds()) > time: #this is actually checking to see if the time is over 30 seconds old, a new update is -21600 seconds
+    if int(time_diff.total_seconds()) > time:
         if deal.item_id == 18:
             deal.item_id= 3
         else:
@@ -121,7 +121,7 @@ def remove_cart(request, id):
 def item(request, id):
     item = get_object_or_404(Items, id=id)
     discussion = Discussions.objects.filter(item_id=id).order_by('-created_at')
-    items_left = Purchases.objects.filter(item_id=id).count()
+    items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
     items_left = item.units - items_left
     imageurl = str(item.image)
     item.image = imageurl.replace("apps/items","",1)
@@ -157,6 +157,11 @@ def add_cart(request, id):
         item = id
         status = 'open'
         user = request.session['id']
+        items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
+        items_left = item.units - items_left
+        if quantity > items_left:
+            messages.add_message(request, messages.ERROR, 'Not enough units remaining, please select a lower quantity')
+            return redirect('/item/'+id)
         while quantity>0:
             Purchases.objects.create(item_id=item, user_id=user, status=status)
             quantity = quantity-1

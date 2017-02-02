@@ -3,24 +3,37 @@
 {% block title %}Create Deal{% endblock %}
 
 {% block content %}
-<form action='{% url 'items:add_item' %}' method='post' enctype="multipart/form-data">
+<h1>Add an Item</h1>
+<form action='{% url "items:add_item" %}' method='post' enctype="multipart/form-data">
   {% csrf_token %}
-  Item Name:-------<input type='text' name='name'>
-  <br>
-  Item Description:<textarea name='description'></textarea>
-  <br>
-  Price:--------------<input type='text' name='price'>
-  <br>
-  Amount to sell:--<input type='text' name='units'>
-  <br>
-  Category:---------<select name='category'>
-    {% for category in categories %}
-      <option value="{{category}}">{{category}}</option>
-    {% endfor %}
-  </select>
-  <br>
-  Image:-------------<input type='file' name='image'>
-  <br>
-  <input type='submit' name='button' value='Add Item'>
+  <div class="col-10 form-group">
+    <label>Item Name:</label>
+    <input class='form-control' type='text' name='name'>
+  </div>
+  <div class="col-10 form-group">
+    <label>Item Description:</label>
+    <textarea class='form-control' name="description" rows="8" cols="80"></textarea>
+  </div>
+  <div class="col-10 form-group">
+    <label>Price:</label>
+    <input class='form-control' type='text' name='price'>
+  </div>
+  <div class="col-10 form-group">
+    <label>Units:</label>
+    <input class='form-control' type='text' name='units'>
+  </div>
+  <div class="col-10 form-group">
+    <label>Category:</label>
+    <select class='form-control' name='category'>
+      {% for category in categories %}
+        <option value="{{category}}">{{category}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-10 form-group">
+    <label>Image:</label>
+    <input class='form-control' type='file' name='image'>
+  </div>
+  <button class='btn btn-default' type="submit" name="button">Add Item</button>
 </form>
 {% endblock %}
