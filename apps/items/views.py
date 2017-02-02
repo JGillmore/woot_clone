@@ -14,24 +14,18 @@ from ..users.models import Users
 from .models import Items, Purchases, Discussions
 import datetime
 import json
-from sys import platform
 
 
 def send_email(user, cart):
     template = get_template('contact_template.txt')
     content = template.render({'first_name': user.first_name, 'purchases': cart})
-    # That email you see below, is suppoed to be the customer's email
     email = EmailMessage("Your order",	content, "Woot", [user.email], headers = {'Reply-To': 'wootclone.dojo@gmail.com'})
     email.send()
 
 def home(request):
-    if platform == 'win32':
-        time = -21570
-    else:
-        time = 30
     deal = DealofTheMinute.objects.get(id=1)
-    time_diff = datetime.datetime.now().replace(tzinfo=None) - deal.updated_at.replace(tzinfo=None)
-    if int(time_diff.total_seconds()) > time:
+    time_diff = datetime.datetime.utcnow().replace(tzinfo=None) - deal.updated_at.replace(tzinfo=None)
+    if int(time_diff.total_seconds()) > 30:
         if deal.item_id == 18:
             deal.item_id= 3
         else:
