@@ -74,7 +74,8 @@ def create_deal(request):
     users = Users.objects.filter(admin=0)
     if user.admin:
         form = NewItemForm()
-        return render(request, 'items/create_deal.html', {'form': form, 'users':users})
+        categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+        return render(request, 'items/create_deal.html', {'categories':categories, 'form': form, 'users':users})
     return redirect('items:home')
 
 def promote(request, id):
@@ -86,7 +87,6 @@ def promote(request, id):
 
 def add_item(request):
     if request.method == 'POST':
-        print request.POST
         form = NewItemForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
@@ -185,6 +185,7 @@ def chart_data(request, id):
     chart_data = json.dumps(chart_data)
     return HttpResponse(chart_data)
 
+@csrf_exempt
 def add_cart(request, id):
     try:
         quantity = int(request.POST['quantity'])
@@ -193,15 +194,14 @@ def add_cart(request, id):
         items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
         item = Items.objects.get(pk=id)
         items_left = item.units - items_left
-        while quantity>0:
-            Purchases.objects.create(item_id=id, user_id=user, status=status)
-            quantity = quantity-1
         if quantity > items_left:
             messages.add_message(request, messages.ERROR, 'Not enough units remaining, please select a lower quantity')
             return redirect('/item/'+id)
+        while quantity>0:
+            Purchases.objects.create(item_id=id, user_id=user, status=status)
+            quantity = quantity-1
         return redirect('/cart')
     except:
-        print '3'
         return redirect('users:index')
 
 def add_discussion(request):
@@ -229,14 +229,3 @@ def add_rating(request):
             return HttpResponse('Successful rating submission')
     else:
         return HttpResponse('Failed rating submission')
-
-def add_item(request):
-    if request.method == 'POST':
-        Items.objects.add(request.POST['name'], request.POST['description'], request.POST['price'], request.POST['units'], request.POST['category'], request.FILES['image'])
-    return redirect(reverse('items:create_deal'))
-
-    #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION
-    # item = Items.objects.get(id=2)
-    # imageurl = str(item.image)
-    # item.image = imageurl.replace("apps/items","",1)
-    # context = {'item':item, 'imageurl':imageurl}

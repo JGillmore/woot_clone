@@ -46,6 +46,9 @@ footer{
   min-height: calc(100vh - 60px);
   margin-bottom: 35px;
 }
+#donutchart{
+  margin: 0 auto;
+}
 
 /* ITEM PAGE */
 .itemInfo{
@@ -92,6 +95,22 @@ footer{
 .categoryHeader{
   text-align: center;
   margin-bottom: 40px;
+}
+.cartButton{
+  position: absolute;
+  left: 5px;
+  bottom: 0;
+}
+.item_id{
+  display: none;
+}
+.added{
+  font-size: 20px;
+  color: green;
+  position: absolute;
+  left: 55px;
+  bottom: 0;
+  display: none;
 }
 
 /* PROFILE PAGE */
