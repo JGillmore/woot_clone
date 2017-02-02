@@ -8,7 +8,7 @@ from django.core.mail import EmailMessage, send_mail
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum
 from django.http import HttpResponse
-from forms import CreditCardForm
+from forms import CreditCardForm, NewItemForm
 from .models import *
 from ..users.models import Users
 from .models import Items, Purchases, Discussions
@@ -41,7 +41,7 @@ def home(request):
     deal.item.image = imageurl.replace("apps/items","",1)
     categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
     context = {'categories':categories,'deal':deal}
-    return render(request, 'items/index.html', context)
+    return render(request, 'items/home.html', context)
 
 class BrowseView(ListView):
     model = Items
@@ -71,15 +71,19 @@ class BrowseView(ListView):
 def create_deal(request):
     user = Users.objects.get(id=request.session['id'])
     if user.admin:
-        categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-        context = {'categories':categories}
-        return render(request, 'items/create_deal.html', context)
+        form = NewItemForm()
+        return render(request, 'items/create_deal.html', {'form': form})
     return redirect('items:home')
 
 def add_item(request):
     if request.method == 'POST':
-        Items.objects.add(request.POST['name'], request.POST['description'], request.POST['price'], request.POST['units'], request.POST['category'], request.FILES['image'])
-    return redirect(reverse('items:create_deal'))
+        print request.POST
+        form = NewItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Item added')
+            return redirect('users:profile')
+    return render(request, 'items/create_deal.html', {'form': form})
 
     #NEEDED TO ACCESS IMAGES FROM THIERE SAVED LOCATION
     # item = Items.objects.get(id=2)
