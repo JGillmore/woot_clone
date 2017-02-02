@@ -34,7 +34,12 @@ def home(request):
     imageurl = str(deal.item.image)
     deal.item.image = imageurl.replace("apps/items","",1)
     categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-    context = {'categories':categories,'deal':deal}
+    data = [['Category', 'Items']]
+    for c in categories:
+        count = Purchases.objects.filter(status='closed').filter(item_id__category=c).count()
+        data.append([str(c),count])
+    print data
+    context = {'categories':categories,'deal':deal, 'data':json.dumps(data)}
     return render(request, 'items/index.html', context)
 
 class BrowseView(ListView):
