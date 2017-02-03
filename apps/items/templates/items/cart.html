@@ -3,6 +3,9 @@
 {% block title %}Cart{% endblock %}
 
 {% block content %}
+{% for m in messages %}
+		<h1 class="{{m.tags}}">{{m}}</h1>
+		{% endfor %}
 <h1>{{request.session.name}}'s Cart</h1>
 {% if cart_items %}
 	<div class="row">
@@ -11,8 +14,9 @@
   			<tr>
      			<th class='headerImage'></th>
      			<th align="middle">Item</th>
-     			<th align="middle">Price</th>
-     			<th align="middle">Remove</th>
+     			<th align="middle">Unit Price</th>
+     			<th align="middle">Quantity</th>
+     			<th align="middle">Remove All</th>
   			</tr>
  			</thead>
  			<tbody>
@@ -22,10 +26,16 @@
      			<td class='cellPic'><a href="/item/{{i.item.id}}"><img class='img-thumbnail tablePics'src="{{i.image}}" alt="{{i.name}}" align="middle"></a></td>
      			<td><a href="item/{{i.item.id}}">{{i.item.name}}</a></td>
      			<td>${{i.item.price}}</td>
-     			<td class='trash'><a href="remove_cart/{{i.id}}"><span class="glyphicon glyphicon-trash" style="color: red; font-size: 2em;"></span></a></td>
+     			{% for item in unique_cart%}
+     				{% if i.item.id == item.item_id%}
+							<td><a href="/increase/{{i.item.id}}"><span style="color: green;" class="glyphicon glyphicon-arrow-up"></span><a href="decrease/{{i.item.id}}"><span style="color: red;" class="glyphicon glyphicon-arrow-down"></span></a>{{item.the_count}}</td>
+						{% endif %}
+					{% endfor %}
+     			<td class='trash'><a href="remove_cart_unit/{{i.item.id}}"><span class="glyphicon glyphicon-trash" style="color: red; font-size: 2em;"></span></a></td>
   			</tr>
   		{% endfor %}
   			<tr>
+  				<td></td>
   				<td></td>
   				<td align="right" style="font-size: 1.5em;">Total</td>
   				<td style="font-size: 1.5em;">${{sum_total}}</td>
