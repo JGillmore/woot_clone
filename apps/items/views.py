@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.core.urlresolvers import reverse
-from django.db.models import Avg, Sum
+from django.db.models import Avg, Sum, Count
 from django.contrib import messages
 from django.template.loader import get_template
 from django.views.generic import ListView
@@ -26,7 +26,7 @@ def home(request):
     deal = DealofTheMinute.objects.get(id=1)
     time_diff = datetime.datetime.utcnow().replace(tzinfo=None) - deal.updated_at.replace(tzinfo=None)
     if int(time_diff.total_seconds()) > 30:
-        if deal.item_id == 18:
+        if deal.item_id == 19:
             deal.item_id= 3
         else:
             deal.item_id= deal.item_id+1
@@ -74,7 +74,7 @@ def create_deal(request):
         user = Users.objects.get(id=request.session['id'])
     except:
         return redirect('items:home')
-    users = Users.objects.filter(admin=0)
+    users = Users.objects.filter(admin=0).order_by('email')
     if user.admin:
         form = NewItemForm()
         categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
@@ -108,6 +108,9 @@ def cart(request):
             sum_total = sum_total + float(item.item.price)
             imageurl = str(item.item.image)
             item.image = imageurl.replace("apps/items","",1)
+        
+        unique_cart = Purchases.objects.filter(status='open').values('item_id').annotate(the_count=Count('item_id'))
+        print unique_cart
 
         form = CreditCardForm()
 
@@ -128,13 +131,40 @@ def cart(request):
                     messages.error(request, 'Card rejected')
                 return redirect('items:cart')
         categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-        return render(request, 'items/cart.html', {'cart_items': cart_items, 'form': form, 'sum_total':sum_total, 'categories':categories})
+        return render(request, 'items/cart.html', {'cart_items': cart_items, 'form': form, 'sum_total':sum_total, 'categories':categories, 'unique_cart':unique_cart})
     return redirect('users:index')
 
-def remove_cart(request, id):
+def remove_cart_unit(request, id):
     if 'id' in request.session:
-        delete = Purchases.objects.get(pk=id)
+        delete = Purchases.objects.filter(user_id=request.session['id']).filter(status='open').filter(item_id=id)
         delete.delete()
+        return redirect('items:cart')
+    return redirect('users:index')
+
+def increase_cart_quantity(request, id):
+    if 'id' in request.session:
+        status = 'open'
+        user = request.session['id']
+        quantity = Purchases.objects.filter(item_id=id).filter(status='open').filter(user_id=user).count()
+        quantity= quantity +1
+        items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
+        item = Items.objects.get(pk=id)
+        items_left = item.units - items_left
+        if quantity > items_left:
+            messages.add_message(request, messages.ERROR, 'Not enough units remaining')
+            return redirect('items:cart')
+        Purchases.objects.create(item_id=id, user_id=user, status=status)
+        return redirect('items:cart')
+    return redirect('users:index')
+def decrease_cart_quantity(request, id):
+    if 'id' in request.session:
+        user = request.session['id']
+        quantity = Purchases.objects.filter(item_id=id).filter(user_id=user).filter(status='open').count()
+        if quantity == 0:
+            messages.add_message(request, messages.ERROR, 'Cannot delete you do not have this item in your cart')
+            return redirect('items:cart')
+        decrease = Purchases.objects.filter(item_id=id).filter(user_id=user).filter(status='open').first()
+        decrease.delete()
         return redirect('items:cart')
     return redirect('users:index')
 
@@ -146,7 +176,10 @@ def remove_cart_all(request):
     return redirect('users:index')
 
 def item(request, id):
-    item = get_object_or_404(Items, id=id)
+    try:
+        item = Items.objects.get(id=id)
+    except:
+        return redirect(reverse('items:home'))
     discussion = Discussions.objects.filter(item_id=id).order_by('-created_at')
     items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
     items_left = item.units - items_left
