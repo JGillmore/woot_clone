@@ -70,7 +70,10 @@ class BrowseView(ListView):
         return context
 
 def create_deal(request):
-    user = Users.objects.get(id=request.session['id'])
+    try:
+        user = Users.objects.get(id=request.session['id'])
+    except:
+        return redirect('items:home')
     users = Users.objects.filter(admin=0)
     if user.admin:
         form = NewItemForm()
