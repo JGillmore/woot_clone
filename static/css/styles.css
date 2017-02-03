@@ -1,0 +1,156 @@
+/* GENERAL */
+.wrapper{
+  margin-top: 100px;
+}
+.pagination{
+  display: block;
+  width: 100%;
+  font-size: 16px;
+}
+
+/* NAVBAR */
+.navbar-fixed-top{
+  height:60px;
+  width: 100%;
+}
+.panel-heading, .jumbotron{
+  text-align: center;
+}
+#navbar{
+  background: #F8F8F8;
+}
+
+
+/* FOOTER */
+footer{
+  background: #F8F8F8;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  color: #777777;
+}
+.error{
+  color: red;
+  font-size: 18px;
+}
+.success{
+  color: green;
+  font-size: 18px;
+}
+
+/* HOME PAGE */
+.layout{
+  min-height: calc(100vh - 60px);
+  margin-bottom: 30px;
+}
+#donutchart{
+  margin: 0 auto;
+}
+
+/* ITEM PAGE */
+.itemInfo{
+  text-align: center;
+}
+#hidden{
+  display: none;
+}
+.glyphicon{
+  font-size: 20px;
+}
+.glyphicon-star{
+  color: #998100;
+}
+.starsDiv{
+  margin-bottom: 15px;
+}
+.discussion{
+  padding-left: 0px !important;
+  margin-bottom: 10px;
+}
+
+/* BROWSE PAGE */
+.item{
+  border: 1px solid #F8F8F8;
+  padding: 0px !important;
+  height: 335px;
+  text-align: center;
+}
+.panel-body p{
+  margin-bottom: 0px;
+  position: absolute;
+  bottom: 0;
+  left: 42%
+}
+@media screen and (min-width: 580px) and (max-width: 767px){
+  .panel-body p{
+    left: 46%
+  }
+}
+
+.panel{
+  margin-bottom: 0px !important;
+}
+.itemWrap{
+  margin-bottom: 5px;
+  padding-left: 2.5px !important;
+  padding-right: 2.5px !important;
+}
+.categoryHeader{
+  text-align: center;
+  margin-bottom: 40px;
+}
+.cartButton, .soldout{
+  position: absolute !important;
+  left: 5px !important;
+  bottom: 0px !important;
+}
+.item_id{
+  display: none;
+}
+.added{
+  font-size: 20px;
+  color: green;
+  position: absolute;
+  left: 55px;
+  bottom: 0;
+  display: none;
+}
+
+/* PROFILE PAGE */
+tr td{
+  vertical-align: middle !important;
+}
+.tablePics{
+  max-width: 100px;
+  max-height: 100px;
+}
+.comment p{
+  margin-left: 40px;
+}
+hr{
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+/* CC FORM */
+#id_expiration_0, #id_expiration_1{
+  display: inline-block;
+  width: 100px;
+}
+label[for=id_expiration_0]{
+  display: block;
+}
+.btn{
+  margin-top: 3px;
+}
+
+@media only screen and (max-width: 500px){
+  .cellPic, .headerImage{
+    display: none !important;
+  }
+}
+.table > tbody > tr > td {
+     vertical-align: middle;
+}

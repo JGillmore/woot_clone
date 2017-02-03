@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'g+iq^gvqo$j-p7d&_2fky8i687j85a2u8cvh(h)9(wdq6aqg)p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['52.200.78.128']
 
 
 # Application definition
@@ -130,3 +130,5 @@ EMAIL_PORT=587
 EMAIL_HOST_USER='wootclone.dojo@gmail.com'
 EMAIL_HOST_PASSWORD='3fullstacks'
 EMAIL_USE_TLS=True
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
