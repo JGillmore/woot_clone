@@ -26,7 +26,7 @@ def home(request):
     deal = DealofTheMinute.objects.get(id=1)
     time_diff = datetime.datetime.utcnow().replace(tzinfo=None) - deal.updated_at.replace(tzinfo=None)
     if int(time_diff.total_seconds()) > 30:
-        if deal.item_id == 18:
+        if deal.item_id == 19:
             deal.item_id= 3
         else:
             deal.item_id= deal.item_id+1
@@ -74,7 +74,7 @@ def create_deal(request):
         user = Users.objects.get(id=request.session['id'])
     except:
         return redirect('items:home')
-    users = Users.objects.filter(admin=0)
+    users = Users.objects.filter(admin=0).order_by('email')
     if user.admin:
         form = NewItemForm()
         categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
@@ -176,7 +176,10 @@ def remove_cart_all(request):
     return redirect('users:index')
 
 def item(request, id):
-    item = get_object_or_404(Items, id=id)
+    try:
+        item = Items.objects.get(id=id)
+    except:
+        return redirect(reverse('items:home'))
     discussion = Discussions.objects.filter(item_id=id).order_by('-created_at')
     items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
     items_left = item.units - items_left
@@ -194,9 +197,11 @@ def item(request, id):
 
     try:
         item_rating_by_user = Ratings.objects.filter(user_id=request.session['id']).filter(item_id=id)
-        item_rating_by_user = item_rating_by_user[0]
     except:
         item_rating_by_user = ''
+    else:
+        if item_rating_by_user:
+            item_rating_by_user = item_rating_by_user[0]
 
     categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
     context = {'categories':categories, 'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': item_rating_by_user, 'chart_data':json.dumps(chart_data)}
