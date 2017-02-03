@@ -22,9 +22,11 @@
         </div>
       </a>
       {% if 'id' in request.session %}
-      <span class='item_id'>{{ item.id }}</span>
-      <button class='cartButton btn btn-success' type="button">+</button>
-      <span class='added'></span>
+        {% if item.amount_left > 0 %}
+          <span class='item_id'>{{ item.id }}</span>
+          <button class='cartButton btn btn-success' type="button">+</button>
+          <span class='added'></span>
+        {% endif %}
       {% endif %}
     </div>
   {% endfor %}

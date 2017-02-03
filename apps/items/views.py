@@ -70,6 +70,8 @@ class BrowseView(ListView):
         for item in queryset:
             imageurl = str(item.image)
             item.image = imageurl.replace("apps/items","",1)
+            items_left = Purchases.objects.filter(item_id=item.id).filter(status='closed').count()
+            item.amount_left = item.units - items_left
 
         return queryset
 
@@ -149,7 +151,7 @@ def cart(request):
             return redirect('items:cart')
     categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
     return render(request, 'items/cart.html', {'cart_items': cart_items, 'form': form, 'sum_total':sum_total, 'categories':categories, 'unique_cart':unique_cart, 'unique_items':unique_items, 'all_items':all_items})
-    
+
 @logged_in
 def remove_cart_unit(request, id):
     delete = Purchases.objects.filter(user_id=request.session['id']).filter(status='open').filter(item_id=id)
