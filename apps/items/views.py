@@ -124,7 +124,7 @@ def cart(request):
 
     for item in cart_items:
         sum_total = sum_total + float(item.item.price)
-        
+
     unique_cart = Purchases.objects.filter(status='open').values('item_id').annotate(the_count=Count('item_id'))
     unique_items = Purchases.objects.filter(status='open').filter(user=user).values_list('item_id', flat=True).distinct()
 
@@ -241,8 +241,7 @@ def add_cart(request, id):
         items_sold = Purchases.objects.filter(item_id=id).filter(status='closed').count()
         item = Items.objects.get(pk=id)
         items_left = item.units - items_sold
-        if request.is_ajax:
-            print Purchases.objects.filter(item_id=id).filter(status='open').filter(user=user_o).count()
+        if request.is_ajax():
             if Purchases.objects.filter(item_id=id).filter(status='open').filter(user_id=user).count() > items_left:
                 return HttpResponse('FALSE')
             else:
