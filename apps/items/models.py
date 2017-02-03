@@ -12,6 +12,7 @@ class Items(models.Model):
 	description = models.TextField(blank=False,)
 	price = models.DecimalField(blank=False, max_digits=9, decimal_places=2)
 	units = models.PositiveSmallIntegerField(blank=False)
+	available = models.BooleanField(default=True)
 	category = models.CharField(blank=False, max_length=200)
 	image = models.ImageField(blank=False, upload_to='apps/items/static/images/dbitems/')
 	created_at = models.DateTimeField(auto_now_add=True)

@@ -70,6 +70,7 @@ class BrowseView(ListView):
         for item in queryset:
             imageurl = str(item.image)
             item.image = imageurl.replace("apps/items","",1)
+            print item.available
 
         return queryset
 
@@ -149,7 +150,7 @@ def cart(request):
             return redirect('items:cart')
     categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
     return render(request, 'items/cart.html', {'cart_items': cart_items, 'form': form, 'sum_total':sum_total, 'categories':categories, 'unique_cart':unique_cart, 'unique_items':unique_items, 'all_items':all_items})
-    
+
 @logged_in
 def remove_cart_unit(request, id):
     delete = Purchases.objects.filter(user_id=request.session['id']).filter(status='open').filter(item_id=id)
@@ -237,9 +238,17 @@ def add_cart(request, id):
         quantity = int(request.POST['quantity'])
         status = 'open'
         user = request.session['id']
-        items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
+        user_o = Users.objects.get(id=user)
+        items_sold = Purchases.objects.filter(item_id=id).filter(status='closed').count()
         item = Items.objects.get(pk=id)
-        items_left = item.units - items_left
+        items_left = item.units - items_sold
+        if request.is_ajax:
+            print Purchases.objects.filter(item_id=id).filter(status='open').filter(user=user_o).count()
+            if Purchases.objects.filter(item_id=id).filter(status='open').filter(user_id=user).count() > items_left:
+                return HttpResponse('FALSE')
+            else:
+                Purchases.objects.create(item_id=id, user_id=user, status=status)
+                return HttpResponse('TRUE')
         if quantity > items_left:
             messages.add_message(request, messages.ERROR, 'Not enough units remaining, please select a lower quantity')
             return redirect('/item/'+id)

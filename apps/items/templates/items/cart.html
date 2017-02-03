@@ -3,9 +3,6 @@
 {% block title %}Cart{% endblock %}
 
 {% block content %}
-{% for m in messages %}
-		<h1 class="{{m.tags}}">{{m}}</h1>
-		{% endfor %}
 <h1>{{request.session.name}}'s Cart</h1>
 {% if cart_items %}
 	<div class="row">
