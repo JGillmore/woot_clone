@@ -60,7 +60,6 @@
     $('.cartButton').click(function(){
       $(this).attr("disabled", true);
       var item_id = $(this).siblings('.item_id').text()
-      console.log(item_id);
       $.ajax({
         url: '/add_cart/' + item_id,
         type: 'POST',
