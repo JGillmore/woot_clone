@@ -108,7 +108,6 @@ def cart(request):
         for item in all_items:
             imageurl = str(item.image)
             item.image = imageurl.replace("apps/items","",1)
-            print item
 
         for item in cart_items:
             sum_total = sum_total + float(item.item.price)

@@ -43,6 +43,8 @@
 {% else %}
   <p>You have no product comments</p>
 {% endif %}
+
+
 <h1>Purchase History</h1>
 <hr>
 <table class = "table table-striped">
@@ -50,18 +52,28 @@
     <tr>
       <th class='headerImage'></th>
       <th align="middle">Item</th>
-      <th align="middle">Price</th>
+      <th align="middle">Unit Price</th>
+      <th align="middle">Quantity</th>
     </tr>
   </thead>
   <tbody>
-  {% for item in purchased_items %}
-      <tr>
-      {% load static %}
-        <td class='cellPic'><a href="{% url 'items:item' id=item.item.id %}"><img class='img-thumbnail tablePics' src="{{item.item.image}}" alt="{{item.item.name}}" align="middle"></a></td>
-        <td class='cellName'><a href="{% url 'items:item' id=item.item.id %}">{{item.item.name}}</a></td>
-        <td class='cellPrice'>${{item.item.price}}</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% for u in unique_items %}
+        {% for i in all_items%}
+          {% if u == i.id %}
+            <tr>
+              {% load static %}
+                <td class='cellPic'><a href="/item/{{i.id}}"><img class='img-thumbnail tablePics'src="{{i.image}}" alt="{{i.name}}" align="middle"></a></td>
+                <td><a href="/item/{{i.id}}">{{i.name}}</a></td>
+                <td>${{i.price}}</td>
+                {% for item in unique_cart%}
+                  {% if u == item.item_id %}
+                    <td><h4>{{item.the_count}}</h4></td>
+                  {% endif %}
+                {% endfor %}
+            </tr>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+          </tbody>
+        </table>
 {% endblock %}
