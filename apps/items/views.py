@@ -146,7 +146,10 @@ def remove_cart_all(request):
     return redirect('users:index')
 
 def item(request, id):
-    item = get_object_or_404(Items, id=id)
+    try:
+        item = Items.objects.get(id=id)
+    except:
+        return redirect(reverse('items:home'))
     discussion = Discussions.objects.filter(item_id=id).order_by('-created_at')
     items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
     items_left = item.units - items_left
