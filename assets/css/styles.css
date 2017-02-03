@@ -43,7 +43,7 @@ footer{
 /* HOME PAGE */
 .layout{
   min-height: calc(100vh - 60px);
-  margin-bottom: 35px;
+  margin-bottom: 30px;
 }
 #donutchart{
   margin: 0 auto;
