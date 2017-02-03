@@ -5,9 +5,21 @@ from django.contrib.messages import get_messages
 from django.core.urlresolvers import reverse
 from datetime import date
 from django.db.models import Count
+from django.http import HttpResponseRedirect
 
 from ..items.models import Items, Purchases, Discussions
 from .models import Users
+
+def logged_in(function):
+    def wrap(request, *args, **kwargs):
+        if 'id' in request.session:
+            return function(request, *args, **kwargs)
+        else:
+            return redirect('users:index')
+
+    wrap.__doc__=function.__doc__
+    wrap.__name__=function.__name__
+    return wrap
 
 def index(request):
     categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
@@ -45,10 +57,12 @@ def register(request):
             return redirect(reverse('items:home'))
     return redirect('users:index')
 
+@logged_in
 def logout(request):
     request.session.clear()
     return redirect('users:login')
 
+@logged_in
 def profile(request):
     if 'id' in request.session:
         user = Users.objects.get(id=request.session['id'])
@@ -69,6 +83,7 @@ def profile(request):
         return render(request, 'users/profile.html', context)
     return redirect('users:login')
 
+@logged_in
 def update_info(request):
     if request.method=='POST':
         email = request.POST['email']

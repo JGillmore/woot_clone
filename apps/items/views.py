@@ -14,7 +14,18 @@ from ..users.models import Users
 from .models import Items, Purchases, Discussions
 import datetime
 import json
+from django.http import HttpResponseRedirect
 
+def logged_in(function):
+    def wrap(request, *args, **kwargs):
+        if 'id' in request.session:
+            return function(request, *args, **kwargs)
+        else:
+            return redirect('users:index')
+
+    wrap.__doc__=function.__doc__
+    wrap.__name__=function.__name__
+    return wrap
 
 def send_email(user, cart):
     template = get_template('contact_template.txt')
@@ -59,6 +70,8 @@ class BrowseView(ListView):
         for item in queryset:
             imageurl = str(item.image)
             item.image = imageurl.replace("apps/items","",1)
+            items_left = Purchases.objects.filter(item_id=item.id).filter(status='closed').count()
+            item.amount_left = item.units - items_left
 
         return queryset
 
@@ -69,6 +82,7 @@ class BrowseView(ListView):
         context['categories'] = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
         return context
 
+@logged_in
 def create_deal(request):
     try:
         user = Users.objects.get(id=request.session['id'])
@@ -81,6 +95,7 @@ def create_deal(request):
         return render(request, 'items/create_deal.html', {'categories':categories, 'form': form, 'users':users})
     return redirect('items:home')
 
+@logged_in
 def promote(request, id):
     user = Users.objects.get(id=request.session['id'])
     if user.admin:
@@ -88,6 +103,7 @@ def promote(request, id):
         return redirect('/create')
     return redirect('items:home')
 
+@logged_in
 def add_item(request):
     if request.method == 'POST':
         form = NewItemForm(request.POST, request.FILES)
@@ -97,86 +113,82 @@ def add_item(request):
             return redirect('users:profile')
     return render(request, 'items/create_deal.html', {'form': form})
 
+@logged_in
 def cart(request):
-    if 'id' in request.session:
-        user = Users.objects.get(id=request.session['id'])
-        cart_items = Purchases.objects.filter(status='open').filter(user=user).prefetch_related('item')
-        sum_total = 0.00
-        rating = "1"
-        all_items = Items.objects.all()
+    user = Users.objects.get(id=request.session['id'])
+    cart_items = Purchases.objects.filter(status='open').filter(user=user).prefetch_related('item')
+    sum_total = 0.00
+    rating = "1"
+    all_items = Items.objects.all()
+    for item in all_items:
+        imageurl = str(item.image)
+        item.image = imageurl.replace("apps/items","",1)
 
-        for item in all_items:
-            imageurl = str(item.image)
-            item.image = imageurl.replace("apps/items","",1)
-
-        for item in cart_items:
-            sum_total = sum_total + float(item.item.price)
+    for item in cart_items:
+        sum_total = sum_total + float(item.item.price)
         
-        unique_cart = Purchases.objects.filter(status='open').values('item_id').annotate(the_count=Count('item_id'))
-        unique_items = Purchases.objects.filter(status='open').filter(user=user).values_list('item_id', flat=True).distinct()
+    unique_cart = Purchases.objects.filter(status='open').values('item_id').annotate(the_count=Count('item_id'))
+    unique_items = Purchases.objects.filter(status='open').filter(user=user).values_list('item_id', flat=True).distinct()
 
-        form = CreditCardForm()
+    form = CreditCardForm()
 
-        if request.method == 'POST':
-            if not cart_items:
-                messages.error(request, 'No items to buy')
-                return redirect('items:cart')
-            form = CreditCardForm(request.POST)
-            if form.is_valid():
-                total_price = user.purchases_set.filter(status='open').aggregate(Sum('item__price')).get('item__price__sum') * 100
-                charge_id = Purchases.chargeCard(int(total_price), request.POST['number'], request.POST['expiration_0'], request.POST['expiration_1'], request.POST['cvc'])
-                if charge_id:
-                    for item in user.purchases_set.filter(status='open'):
-                        item.change_order_status(charge_id)
-                    messages.success(request, 'Products purchased!')
-                    send_email(user, cart_items)
-                else:
-                    messages.error(request, 'Card rejected')
-                return redirect('items:cart')
-        categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-        return render(request, 'items/cart.html', {'cart_items': cart_items, 'form': form, 'sum_total':sum_total, 'categories':categories, 'unique_cart':unique_cart, 'unique_items':unique_items, 'all_items':all_items})
+    if request.method == 'POST':
+        if not cart_items:
+            messages.error(request, 'No items to buy')
+            return redirect('items:cart')
+        form = CreditCardForm(request.POST)
+        if form.is_valid():
+            total_price = user.purchases_set.filter(status='open').aggregate(Sum('item__price')).get('item__price__sum') * 100
+            charge_id = Purchases.chargeCard(int(total_price), request.POST['number'], request.POST['expiration_0'], request.POST['expiration_1'], request.POST['cvc'])
+            if charge_id:
+                for item in user.purchases_set.filter(status='open'):
+                    item.change_order_status(charge_id)
+                messages.success(request, 'Products purchased!')
+                send_email(user, cart_items)
+            else:
+                messages.error(request, 'Card rejected')
+            return redirect('items:cart')
+    categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+    return render(request, 'items/cart.html', {'cart_items': cart_items, 'form': form, 'sum_total':sum_total, 'categories':categories, 'unique_cart':unique_cart, 'unique_items':unique_items, 'all_items':all_items})
     return redirect('users:index')
 
+@logged_in
 def remove_cart_unit(request, id):
-    if 'id' in request.session:
-        delete = Purchases.objects.filter(user_id=request.session['id']).filter(status='open').filter(item_id=id)
-        delete.delete()
-        return redirect('items:cart')
-    return redirect('users:index')
+    delete = Purchases.objects.filter(user_id=request.session['id']).filter(status='open').filter(item_id=id)
+    delete.delete()
+    return redirect('items:cart')
 
+@logged_in
 def increase_cart_quantity(request, id):
-    if 'id' in request.session:
-        status = 'open'
-        user = request.session['id']
-        quantity = Purchases.objects.filter(item_id=id).filter(status='open').filter(user_id=user).count()
-        quantity= quantity +1
-        items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
-        item = Items.objects.get(pk=id)
-        items_left = item.units - items_left
-        if quantity > items_left:
-            messages.add_message(request, messages.ERROR, 'Not enough units remaining')
-            return redirect('items:cart')
-        Purchases.objects.create(item_id=id, user_id=user, status=status)
+    status = 'open'
+    user = request.session['id']
+    quantity = Purchases.objects.filter(item_id=id).filter(status='open').filter(user_id=user).count()
+    quantity= quantity +1
+    items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
+    item = Items.objects.get(pk=id)
+    items_left = item.units - items_left
+    if quantity > items_left:
+        messages.add_message(request, messages.ERROR, 'Not enough units remaining')
         return redirect('items:cart')
-    return redirect('users:index')
-def decrease_cart_quantity(request, id):
-    if 'id' in request.session:
-        user = request.session['id']
-        quantity = Purchases.objects.filter(item_id=id).filter(user_id=user).filter(status='open').count()
-        if quantity == 0:
-            messages.add_message(request, messages.ERROR, 'Cannot delete you do not have this item in your cart')
-            return redirect('items:cart')
-        decrease = Purchases.objects.filter(item_id=id).filter(user_id=user).filter(status='open').first()
-        decrease.delete()
-        return redirect('items:cart')
-    return redirect('users:index')
+    Purchases.objects.create(item_id=id, user_id=user, status=status)
+    return redirect('items:cart')
 
-def remove_cart_all(request):
-    if 'id' in request.session:
-        delete = Purchases.objects.filter(status='open').filter(user_id=request.session['id'])
-        delete.delete()
+@logged_in
+def decrease_cart_quantity(request, id):
+    user = request.session['id']
+    quantity = Purchases.objects.filter(item_id=id).filter(user_id=user).filter(status='open').count()
+    if quantity == 0:
+        messages.add_message(request, messages.ERROR, 'Cannot delete you do not have this item in your cart')
         return redirect('items:cart')
-    return redirect('users:index')
+    decrease = Purchases.objects.filter(item_id=id).filter(user_id=user).filter(status='open').first()
+    decrease.delete()
+    return redirect('items:cart')
+
+@logged_in
+def remove_cart_all(request):
+    delete = Purchases.objects.filter(status='open').filter(user_id=request.session['id'])
+    delete.delete()
+    return redirect('items:cart')
 
 def item(request, id):
     try:
@@ -221,6 +233,7 @@ def chart_data(request, id):
     chart_data = json.dumps(chart_data)
     return HttpResponse(chart_data)
 
+@logged_in
 def add_cart(request, id):
     try:
         quantity = int(request.POST['quantity'])
@@ -239,6 +252,7 @@ def add_cart(request, id):
     except:
         return redirect('users:index')
 
+@logged_in
 def add_discussion(request):
     try:
          discussion = request.POST['discussion']
@@ -249,6 +263,7 @@ def add_discussion(request):
     except:
         return redirect('users:index')
 
+@logged_in
 def add_rating(request):
     rate = request.POST['rating']
     item = request.POST['hidden']
