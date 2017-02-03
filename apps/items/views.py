@@ -113,6 +113,7 @@ def add_item(request):
 
 @logged_in
 def cart(request):
+
     user = Users.objects.get(id=request.session['id'])
     cart_items = Purchases.objects.filter(status='open').filter(user=user).prefetch_related('item')
     sum_total = 0.00
@@ -128,7 +129,6 @@ def cart(request):
 
     unique_cart = Purchases.objects.filter(status='open').values('item_id').annotate(the_count=Count('item_id'))
     unique_items = Purchases.objects.filter(status='open').filter(user=user).values_list('item_id', flat=True).distinct()
-
     form = CreditCardForm()
 
     if request.method == 'POST':
@@ -149,7 +149,7 @@ def cart(request):
             return redirect('items:cart')
     categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
     return render(request, 'items/cart.html', {'cart_items': cart_items, 'form': form, 'sum_total':sum_total, 'categories':categories, 'unique_cart':unique_cart, 'unique_items':unique_items, 'all_items':all_items})
-
+    
 @logged_in
 def remove_cart_unit(request, id):
     delete = Purchases.objects.filter(user_id=request.session['id']).filter(status='open').filter(item_id=id)
