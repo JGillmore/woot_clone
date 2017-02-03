@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.messages import get_messages
 from django.core.urlresolvers import reverse
 from datetime import date
+from django.db.models import Count
 from django.http import HttpResponseRedirect
 
 from ..items.models import Items, Purchases, Discussions
@@ -63,17 +64,24 @@ def logout(request):
 
 @logged_in
 def profile(request):
-    user = Users.objects.get(id=request.session['id'])
-    comments = Discussions.objects.filter(user=user).order_by('-created_at')
-    user = Users.objects.get(id=request.session['id'])
-    purchased_items = Purchases.objects.filter(status='closed').filter(user=user).order_by('-created_at')
-    for item in purchased_items:
-        imageurl = str(item.item.image)
-        item.item.image = imageurl.replace("apps/items","",1)
-    birth_date = str(user.birth_date)
-    categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
-    context = {'categories':categories, 'comments':comments, 'user':user, 'birth_date':birth_date, 'purchased_items':purchased_items}
-    return render(request, 'users/profile.html', context)
+    if 'id' in request.session:
+        user = Users.objects.get(id=request.session['id'])
+        comments = Discussions.objects.filter(user=user).order_by('-created_at')
+        user = Users.objects.get(id=request.session['id'])
+        purchased_items = Purchases.objects.filter(status='closed').filter(user=user).order_by('-created_at')
+        all_items = Items.objects.all()
+
+        for item in all_items:
+            imageurl = str(item.image)
+            item.image = imageurl.replace("apps/items","",1)
+        
+        unique_cart = Purchases.objects.filter(status='closed').filter(user_id=user).values('item_id').annotate(the_count=Count('item_id'))
+        unique_items = Purchases.objects.filter(status='closed').filter(user_id=user).values_list('item_id', flat=True).distinct()
+        birth_date = str(user.birth_date)
+        categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
+        context = {'categories':categories, 'comments':comments, 'user':user, 'birth_date':birth_date, 'purchased_items':purchased_items, 'all_items':all_items, 'unique_cart':unique_cart, 'unique_items':unique_items}
+        return render(request, 'users/profile.html', context)
+    return redirect('users:login')
 
 @logged_in
 def update_info(request):

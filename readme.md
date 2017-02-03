@@ -1,5 +1,5 @@
-# Woot Clone ![test](https://github.com/favicon.ico)
-* need project description
+# Woot Clone ![pageres](assets/favicon/favicon.ico)
+* This project was created in order to challenge our python knowledge and create a Woot.com clone. 
 
 ## Authors:
 ##### Co-Authors:
@@ -7,25 +7,15 @@
 * [Nick Phillips](https://github.com/phillipn)
 * [Jeremy Gillmore](https://github.com/JGillmore)
 
-## License:
-* need to pick license
-
-##Dependencies:
-* need to add dependencies 
-
 ## Cloning:
 ``` git clone https://github.com/JGillmore/woot_clone.git ```
 
-## Pull Request:
-*add pull request requirements
-
-## Domains
-* Deployed Demo Site [Demo](https://google.com)
+## Demo:
+* Deployed Demo Site [Demo](http://52.204.220.233/)
 
 ## Technology
-* BootStrap
+* Django
+* Bootstrap
 * jQuery
-* Glyphicons
-* stripe
-* brcypt
-* pillow
+* Stripe
+

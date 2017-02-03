@@ -27,7 +27,7 @@
      						<td>${{i.price}}</td>
      						{% for item in unique_cart%}
      							{% if u == item.item_id %}
-										<td><a href="/increase/{{u}}"><span style="color: green;" class="glyphicon glyphicon-arrow-up"></span><a href="decrease/{{u}}"><span style="color: red;" class="glyphicon glyphicon-arrow-down"></span></a><h4 style="display: inline-block;border-style: solid; border-width: 0.2em; border-radius: 50%; padding: 3%;">{{item.the_count}}</h4></td>
+										<td><a href="/increase/{{u}}"><span style="color: green;" class="glyphicon glyphicon-arrow-up"></span></a><h4 style="display: inline-block;border-style: solid; border-width: 0.2em; border-radius: 50%; padding: 3%;">{{item.the_count}}</h4><a href="decrease/{{u}}"><span style="color: red;" class="glyphicon glyphicon-arrow-down"></span></a></td>
 									{% endif %}
 								{% endfor %}
      						<td class='trash'><a href="remove_cart_unit/{{u}}"><span class="glyphicon glyphicon-trash" style="color: red; font-size: 2em;"></span></a></td>
