@@ -26,7 +26,7 @@ def home(request):
     deal = DealofTheMinute.objects.get(id=1)
     time_diff = datetime.datetime.utcnow().replace(tzinfo=None) - deal.updated_at.replace(tzinfo=None)
     if int(time_diff.total_seconds()) > 30:
-        if deal.item_id == 18:
+        if deal.item_id == 19:
             deal.item_id= 3
         else:
             deal.item_id= deal.item_id+1
@@ -74,7 +74,7 @@ def create_deal(request):
         user = Users.objects.get(id=request.session['id'])
     except:
         return redirect('items:home')
-    users = Users.objects.filter(admin=0)
+    users = Users.objects.filter(admin=0).order_by('email')
     if user.admin:
         form = NewItemForm()
         categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
