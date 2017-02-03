@@ -21,12 +21,10 @@
           </div>
         </div>
       </a>
-      {% if 'id' in request.session %}
-        {% if item.amount_left > 0 %}
-          <span class='item_id'>{{ item.id }}</span>
-          <button class='cartButton btn btn-success' type="button">+</button>
-          <span class='added'></span>
-        {% endif %}
+      {% if 'id' in request.session and item.available %}
+      <span class='item_id'>{{ item.id }}</span>
+      <button class='cartButton btn btn-success' type="button">+</button>
+      <span class='added'></span>
       {% endif %}
     </div>
   {% endfor %}
@@ -62,17 +60,22 @@
     $('.cartButton').click(function(){
       $(this).attr("disabled", true);
       var item_id = $(this).siblings('.item_id').text()
+      console.log(item_id);
       $.ajax({
         url: '/add_cart/' + item_id,
         type: 'POST',
         data: {'quantity': 1, csrfmiddlewaretoken: csrftoken},
         context: this,
         success: function(data){
-          $(this).siblings('.added').text('+1').fadeIn('slow');
-          $(this).attr("disabled", false);
-          setTimeout(function(){
-            $('.added').fadeOut();
-          }, 1000);
+          if(data.indexOf("FALSE") > -1){
+            $(this).hide()
+          } else {
+            $(this).siblings('.added').text('+1').fadeIn('slow');
+            $(this).attr("disabled", false);
+            setTimeout(function(){
+              $('.added').fadeOut();
+            }, 1000);
+          }
         }
       })
     })

@@ -70,8 +70,6 @@ class BrowseView(ListView):
         for item in queryset:
             imageurl = str(item.image)
             item.image = imageurl.replace("apps/items","",1)
-            items_left = Purchases.objects.filter(item_id=item.id).filter(status='closed').count()
-            item.amount_left = item.units - items_left
 
         return queryset
 
@@ -239,9 +237,17 @@ def add_cart(request, id):
         quantity = int(request.POST['quantity'])
         status = 'open'
         user = request.session['id']
-        items_left = Purchases.objects.filter(item_id=id).filter(status='closed').count()
+        user_o = Users.objects.get(id=user)
+        items_sold = Purchases.objects.filter(item_id=id).filter(status='closed').count()
         item = Items.objects.get(pk=id)
-        items_left = item.units - items_left
+        items_left = item.units - items_sold
+        if request.is_ajax:
+            print Purchases.objects.filter(item_id=id).filter(status='open').filter(user=user_o).count()
+            if Purchases.objects.filter(item_id=id).filter(status='open').filter(user_id=user).count() > items_left:
+                return HttpResponse('FALSE')
+            else:
+                Purchases.objects.create(item_id=id, user_id=user, status=status)
+                return HttpResponse('TRUE')
         if quantity > items_left:
             messages.add_message(request, messages.ERROR, 'Not enough units remaining, please select a lower quantity')
             return redirect('/item/'+id)
