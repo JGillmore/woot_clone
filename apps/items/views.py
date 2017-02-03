@@ -164,10 +164,9 @@ def item(request, id):
 
     try:
         item_rating_by_user = Ratings.objects.filter(user_id=request.session['id']).filter(item_id=id)
+        item_rating_by_user = item_rating_by_user[0]
     except:
         item_rating_by_user = ''
-    else:
-        item_rating_by_user = item_rating_by_user[0]
 
     categories = Items.objects.all().order_by('category').values_list('category', flat=True).distinct()
     context = {'categories':categories, 'item': item, 'discussion': discussion,'items_left': items_left, 'rating_avg': rating_avg, 'r': item_rating_by_user, 'chart_data':json.dumps(chart_data)}
