@@ -21,12 +21,14 @@
           </div>
         </div>
       </a>
-      {% if 'id' in request.session and item.available %}
-      <span class='item_id'>{{ item.id }}</span>
-      <button class='cartButton btn btn-success' type="button">+</button>
-      <span class='added'></span>
-      {% else %}
-      <button class='btn soldout' type="button"><span class='glyphicon glyphicon-remove' style="color:red"></span></button>
+      {% if 'id' in request.session %}
+        {% if item.available %}
+          <span class='item_id'>{{ item.id }}</span>
+          <button class='cartButton btn btn-success' type="button">+</button>
+          <span class='added'></span>
+        {% else %}
+          <button class='btn soldout' type="button"><span class='glyphicon glyphicon-remove' style="color:red"></span></button>
+        {% endif %}
       {% endif %}
     </div>
   {% endfor %}
