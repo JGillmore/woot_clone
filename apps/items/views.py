@@ -70,7 +70,6 @@ class BrowseView(ListView):
         for item in queryset:
             imageurl = str(item.image)
             item.image = imageurl.replace("apps/items","",1)
-            print item.available
 
         return queryset
 
