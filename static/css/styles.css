@@ -34,7 +34,6 @@ footer{
 .error{
   color: red;
   font-size: 18px;
-
 }
 .success{
   color: green;
@@ -75,7 +74,7 @@ footer{
 .item{
   border: 1px solid #F8F8F8;
   padding: 0px !important;
-  height: 330px;
+  height: 335px;
   text-align: center;
 }
 .panel-body p{
@@ -84,6 +83,12 @@ footer{
   bottom: 0;
   left: 42%
 }
+@media screen and (min-width: 580px) and (max-width: 767px){
+  .panel-body p{
+    left: 46%
+  }
+}
+
 .panel{
   margin-bottom: 0px !important;
 }
