@@ -24,7 +24,7 @@
 * stripe==1.46.0
 
 ## Demo:
-* Deployed Demo Site [Demo](http://52.204.220.233/)
+* Deployed Demo Site [Demo](http://52.203.108.88//)
 
 ## Technology
 * Django
