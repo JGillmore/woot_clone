@@ -124,7 +124,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ( os.path.join('assets'), )
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST='smtp.gmail.com'
@@ -132,5 +132,3 @@ EMAIL_PORT=587
 EMAIL_HOST_USER='wootclone.dojo@gmail.com'
 EMAIL_HOST_PASSWORD='3fullstacks'
 EMAIL_USE_TLS=True
-
-#STATIC_ROOT = os.path.join(BASE_DIR, "static/")
