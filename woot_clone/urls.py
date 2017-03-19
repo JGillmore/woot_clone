@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
-from django.conf.urls import patterns
 
 urlpatterns = [
 	url(r'^', include('apps.items.urls', namespace='items')),
@@ -25,9 +24,7 @@ urlpatterns = [
 ]
 
 if not settings.DEBUG:
-    urlpatterns += patterns('',
-        (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
-    )
+    urlpatterns.append(url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}))
 
 # if settings.DEBUG:
 #     import debug_toolbar
