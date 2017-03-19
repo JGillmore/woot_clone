@@ -9,3 +9,4 @@ sendgrid==3.6.3
 sendgrid-django==4.0.4
 sqlparse==0.2.2
 stripe==1.46.0
+gunicorn
