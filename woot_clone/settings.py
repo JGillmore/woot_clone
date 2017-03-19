@@ -25,7 +25,7 @@ SECRET_KEY = 'g+iq^gvqo$j-p7d&_2fky8i687j85a2u8cvh(h)9(wdq6aqg)p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['limitless-refuge-87031.herokuapp.com']
+ALLOWED_HOSTS = ['infinite-basin-40820.herokuapp.com']
 
 
 # Application definition
