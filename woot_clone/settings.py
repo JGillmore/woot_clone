@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'g+iq^gvqo$j-p7d&_2fky8i687j85a2u8cvh(h)9(wdq6aqg)p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['infinite-basin-40820.herokuapp.com']
 
