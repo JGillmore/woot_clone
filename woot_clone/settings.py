@@ -124,7 +124,7 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = ( os.path.join('assets'), )
+STATICFILES_DIRS = ( os.path.join('assets'), os.path.join(PROJECT_ROOT, 'static'),)
 
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST='smtp.gmail.com'
