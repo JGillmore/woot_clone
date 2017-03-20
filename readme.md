@@ -1,5 +1,5 @@
 # Woot Clone ![pageres](assets/favicon/favicon.ico)
-* This project was created in order to challenge our python knowledge and create a Woot.com clone. 
+* This project was created in order to challenge our python knowledge and create a Woot.com clone.
 
 ## Authors:
 ##### Co-Authors:
@@ -24,11 +24,10 @@
 * stripe==1.46.0
 
 ## Demo:
-* Deployed Demo Site [Demo](http://52.203.108.88//)
+* Deployed Demo Site [Demo](http://54.144.210.168/)
 
 ## Technology
 * Django
 * Bootstrap
 * jQuery
 * Stripe
-
